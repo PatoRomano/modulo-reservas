@@ -8,6 +8,10 @@ import Departamento from './pages/departamentos/Departemento'
 import Deporte from './pages/deportes/Deporte'
 import Salon from './pages/salones/Salon'
 import Index from './pages/index'
+import Administrador from './pages/administrador/Administrador';
+import CrearEspacio from './pages/administrador/CrearEspacio';
+
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -21,6 +25,8 @@ function App() {
           <Route path="/deportes" element= {<Deporte />} ></Route>
           <Route path="/salones" element= {<Salon />} ></Route>
           <Route path="/departamentos" element= {<Departamento />} ></Route>
+          <Route path="/administrador" element= {<Administrador />} ></Route>
+          <Route path="/crearespacio" element= {<CrearEspacio />} ></Route>
       </Routes>
     </div>
     </>

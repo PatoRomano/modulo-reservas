@@ -9,6 +9,7 @@ const Navbar = () => {
                 <CustomLink to="/deportes">Deportes</CustomLink>
                 <CustomLink to="/departamentos">Departamentos</CustomLink>
                 <CustomLink to="/salones">Salones</CustomLink>
+                <CustomLink to="/administrador">Administrador</CustomLink>
             </ul>
         </nav>
     );
