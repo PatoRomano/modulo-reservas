@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Fondo from "../../assets/deportes.webp";
 import CardEspacio from "../../components/CardEspacio";
-import { Link, useResolvedPath, useMatch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 //  <Card key={deporte.id} title={deporte.nombre_publico} 
 //  imageSrc={deporte.nombre === "futbol" ? ImageSoccer : deporte.nombre === "paddle" ? ImagePaddle : ImageHandball} />
 

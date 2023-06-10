@@ -1,11 +1,27 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import ButtonBook from "../../components/ButtonBook"
+import ButtonBook from "../../components/ButtonBook";
+
+const Container = styled.div`
+  margin-left:30%;
+  margin-right:30%;
+  margin-top:5%;
+  margin-bottom:5%;
+  background-color: grey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+`;
 const FormContainer = styled.div`
   max-width: 400px;
   margin: 0 auto;
 `;
+
+const ErrorMsg = styled.p`
+  color: red;
+`; 
 
 const Label = styled.label`
   display: block;
@@ -33,7 +49,9 @@ const CrearEspacio = () => {
   const { register, handleSubmit } = useForm();
   const [selectedOption, setSelectedOption] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
-
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [error, setError] = useState('');
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
@@ -52,11 +70,29 @@ const CrearEspacio = () => {
     }
   };
 
+  const handleStartTimeChange = (e) => {
+    setStartTime(e.target.value);
+    setError('');
+  };
+
+  const handleEndTimeChange = (e) => {
+    setEndTime(e.target.value);
+    setError('');
+  };
+
   const onSubmit = (data) => {
-    console.log(data);
+    if (startTime === '' || endTime === '') {
+      setError('Debe tener un horarios asignado');
+    } else if (startTime >= endTime) {
+      setError('El horario asignado no es válido');
+    } else {
+      // Hacer algo con los datos ingresados
+      
+    }
   };
 
   return (
+<Container>
     <FormContainer>
       <h2>Registrar espacio</h2>
       <form onSubmit={handleSubmit}>
@@ -115,11 +151,19 @@ const CrearEspacio = () => {
           </>
         )}
 
-       
-        <ButtonBook type="submit" onButtonClick={handleSubmit(onSubmit)}>Guardar</ButtonBook>
+          <Label>Hora inicio:</Label>
+          <Input type="time" {...register("hora_inicio")} step="1800"  onChange={handleStartTimeChange} />
+          <Label>Hora fin:</Label>
+          <Input type="time" {...register("hora_fin")} step="1800"  onChange={handleEndTimeChange} />
+          {error && <ErrorMsg>{error}</ErrorMsg>}
+        <ButtonBook type="submit" onButtonClick={handleSubmit(onSubmit)}>
+          Guardar
+        </ButtonBook>
       </form>
       <br />
     </FormContainer>
+</Container>
+
   );
 };
 

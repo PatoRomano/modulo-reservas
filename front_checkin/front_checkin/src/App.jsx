@@ -10,7 +10,7 @@ import Salon from './pages/salones/Salon'
 import Index from './pages/index'
 import Administrador from './pages/administrador/Administrador';
 import CrearEspacio from './pages/administrador/CrearEspacio';
-
+import Reserva from './pages/reservas/Reserva'
 
 
 function App() {
@@ -27,6 +27,7 @@ function App() {
           <Route path="/departamentos" element= {<Departamento />} ></Route>
           <Route path="/administrador" element= {<Administrador />} ></Route>
           <Route path="/crearespacio" element= {<CrearEspacio />} ></Route>
+          <Route path="/reserva" element= {<Reserva />} ></Route>
       </Routes>
     </div>
     </>
