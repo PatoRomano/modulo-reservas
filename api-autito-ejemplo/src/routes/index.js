@@ -1,16 +1,12 @@
 const { Router } = require('express');
 const router = Router();
-const { getCars, setCar, getClients, setClient, getSells, setSell } = require('../controller/index.controller')
-const { getUsers } = require('../models/userModel')
-//routes get
-router.get('/users', getUsers);
-router.get('/cars', getCars);
-router.get('/clients', getClients);
-router.get('/sells',getSells);
-//routes post
-router.post('/setCar', setCar);
-router.post('/setClient',setClient);
-router.post('/setSell',setSell);
-
+const { getUsers, findOne } = require('../controller/usuario.controller');
+const { getTiposDeportes, getTipos } = require('../controller/tipoespacio.controller');
+//routes get usuarios
+router.get('/usuarios', getUsers);
+router.get('/usuario/:id',findOne)
+//routes get tipos
+router.get('/tipodeportes', getTiposDeportes);
+router.get('/tipo', getTipos);
 
 module.exports = router;

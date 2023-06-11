@@ -11,17 +11,19 @@ import Index from './pages/index'
 import Administrador from './pages/administrador/Administrador';
 import CrearEspacio from './pages/administrador/CrearEspacio';
 import Reserva from './pages/reservas/Reserva'
-
-
+import Login from './pages/auth/Login'
+import { AuthProvider } from './contexts/AuthContext'
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
+    <AuthProvider>
     <Navbar />
     <div className='container'>
       <Routes>
           <Route path="/" element= {<Index />} ></Route>
+          <Route path="/login" element= {<Login />} ></Route>
           <Route path="/deportes" element= {<Deporte />} ></Route>
           <Route path="/salones" element= {<Salon />} ></Route>
           <Route path="/departamentos" element= {<Departamento />} ></Route>
@@ -30,6 +32,7 @@ function App() {
           <Route path="/reserva" element= {<Reserva />} ></Route>
       </Routes>
     </div>
+    </AuthProvider>
     </>
   )
 }

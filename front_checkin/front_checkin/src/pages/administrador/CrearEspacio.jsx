@@ -114,10 +114,6 @@ const CrearEspacio = () => {
           <>
             <Label>Nombre:</Label>
             <Input type="text" {...register("nombre_salon")} />
-            <Label>Capacidad:</Label>
-            <Input type="number" {...register("capacidad_salon")} />
-            <Label>servicios:</Label>
-            <Input type="text" {...register("servicio_salon")} />
             <Label>precio:</Label>
             <Input type="number" {...register("precio_salon")} />
           </>

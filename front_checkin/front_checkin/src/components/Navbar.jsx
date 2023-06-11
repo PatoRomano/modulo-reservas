@@ -1,10 +1,20 @@
 import React, { useImperativeHandle } from 'react';
-import { Link, useResolvedPath, useMatch } from 'react-router-dom';
-
+import { Link, useResolvedPath, useMatch, useLocation  } from 'react-router-dom';
+import Login from './LoginAuth';
 const Navbar = () => {
+
+    const location = useLocation();
+
+    const hideNavbar = location.pathname === '/login';
+
+  if (hideNavbar) {
+    return null; // Si estás en "/login-form", no muestra el navbar
+  }
     return (
         <nav className="nav">
             <Link to="/" className='site-title'>Checkin</Link>
+            <Link to="/login" className='site-title'>Login</Link>
+
             <ul>
                 <CustomLink to="/deportes">Deportes</CustomLink>
                 <CustomLink to="/departamentos">Departamentos</CustomLink>
