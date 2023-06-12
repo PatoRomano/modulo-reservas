@@ -10,16 +10,16 @@ const getUsers = async (req, res) => {
    
 }
 
-const setUser = async (data) => {
-    const query = 'INSERT INTO usuarios (correo,contraseña,nombre,apellido,id_empresa) VALUES ($1, $2, $3, $4, $5)';
-    const values = [data.correo, data.contraseña, data.nombre, data.apellido, data.id_empresa];
-    try {
-        const result = await pool.query(query, values);
-        console.log('Usuario creado exitosamente');
-        return result.rows;
-      } catch (error) {
-        console.error('Error al crear el usuario', error);
-      }
+const setUser = async (req,res) => {
+    const {correo,contraseña,nombre,apellido,id_empresa} = req.body;
+    const response = await pool.query('INSERT INTO usuarios (correo,contraseña,nombre,apellido,id_empresa) VALUES ($1, $2, $3, $4, $5)',[correo,contraseña,nombre,apellido,id_empresa]);
+    res.status(200).json({
+        message:'usuario agregado correctamente',
+        body:{
+            Tipo:{correo,contraseña,nombre,apellido,id_empresa}
+        }
+    });    
+    console.log(req);  
 };
 
 const findOne = async (data) => {
