@@ -17,7 +17,7 @@ const registerCtrl = async (req,res)  => {
         res.send({data: registerUser})
 
     }catch{
-        console.log("error al registrar usuario");
+        console.log("error al registrar usuario controlador");
     }
 }
 

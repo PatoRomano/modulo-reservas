@@ -8,6 +8,7 @@ const getUsers = async (req, res) => {
 };
 
 const setUser = async (req, res) => {
+  console.log("hola");
   const user = await usuarioModel.setUser(req, res);
   res.status(200).json(user);
 };

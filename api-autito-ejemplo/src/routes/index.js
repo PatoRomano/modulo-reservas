@@ -2,14 +2,13 @@ const { Router } = require('express');
 const router = Router();
 const { getUsers, findOne, setUser} = require('../controller/usuario.controller');
 const { getTiposDeportes, getTiposDepartamentos, getTiposSalones, getTipos, setTipo} = require('../controller/tipoespacio.controller');
-const { getEmpresas,setEmpresa} = require('../controller/empresaController');
-const { getEspacios,setEspacio} = require('../controller/espacio.controller');
+const { getEmpresas,setEmpresa, getEmpresasDeportes, getEmpresasSalones,getEmpresasDepartamentos} = require('../controller/empresaController');
+const { getEspacios,setEspacio, getEspacioDeportes} = require('../controller/espacio.controller');
 const { getHorarios,setHorario} = require('../controller/horarios.controller');
 const { getReservas,setReserva} = require('../controller/reserva.controller');
 const { getServicios,setServicio} = require('../controller/servicio.controller');
 const { getEspacioServicios,setEspacioServicio} = require('../controller/espacioservicio.controller');
 const { getReservasHorarios,setReservaHorario} = require('../controller/reservashorarios.controller');
-
 //Getters
 router.get('/empresas', getEmpresas);
 router.get('/espacio', getEspacios);
@@ -28,6 +27,14 @@ router.get('/tipodeportes', getTiposDeportes);
 router.get('/tipodepartamentos', getTiposDepartamentos);
 router.get('/tiposalones', getTiposSalones);
 router.get('/tipo', getTipos);
+
+//routes get espacios
+router.get('/espacioDeportes', getEspacioDeportes);
+
+//routes get empresas
+router.get('/empresasDeportes', getEmpresasDeportes);
+router.get('/empresasSalones', getEmpresasSalones);
+router.get('/empresasDepartamentos', getEmpresasDepartamentos);
 
 
 //SETTERS

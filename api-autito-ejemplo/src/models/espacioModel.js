@@ -25,6 +25,8 @@ const getEspacios = async (req, res) => {
    
 }
 
+
+
 const findOneEspacio = async (data) => {
     const query = 'SELECT * from usuarios espacio id = $1';
     const values = [data];

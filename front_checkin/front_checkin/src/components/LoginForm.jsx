@@ -2,8 +2,8 @@ import React, {  useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import {login} from '../services/auth/auth'
-import LoginAuth from './LoginAuth';
-import { AuthContext } from '../contexts/AuthContext';
+import { useSignIn } from 'react-auth-kit';
+import { useNavigate } from 'react-router-dom';
 
 const LoginContainer = styled.div`
   display: flex;
@@ -49,53 +49,32 @@ const Button = styled.button`
 `;
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
-  const { auth, handleAuth } = useContext(AuthContext);
-
-  const handleLogin = async () => {
-    // Realiza la lógica de autenticación aquí
-    const data = {"correo":correo,"contraseña":contraseña};
-    try{
-      const response = await login(data);
-      console.log(response.data);
-      handleAuth(true);
-    }catch{
-
-    }
-   
-    // Si la autenticación es exitosa, llama a handleAuth para establecer el estado de autenticación en true
-   
-  };
-
-  const handleLogout = () => {
-    // Realiza la lógica de cierre de sesión aquí
-    // Llama a handleAuth para establecer el estado de autenticación en null o false
-    handleAuth(false);
-  };
-
-  useEffect(() => {
-    if (auth) {
-      // Realizar la redirección después de iniciar sesión
-      window.location.href = '/';
-    }
-  }, [auth]);
-
+  const signIn = useSignIn();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const data = {"correo" : correo, "contraseña" : contraseña};
     try {
-      await handleLogin();
+      const response = await login(data);
+      console.log(response.data.data[0].nombre);
+      const usuario = response.data.data[0];
+      signIn({
+        expiresIn : 3600,
+        authState: {correo:usuario.correo, 
+          nombre: usuario.nombre, 
+          apellido: usuario.apellido, 
+          empresa: usuario.id_empresa}
+      });
+      navigate("/"); 
     } catch (error) {
-      console.log('Error:', error.response.data); // Maneja el error como desees
+      console.log(error); // Maneja el error como desees
     }
   };
 
   return (
-    <div>
-    {auth ? (
-      <button onClick={handleLogout}>Cerrar sesión</button>
-    ) : (
     <LoginContainer>
       <LoginFormContainer>
         <Form onSubmit={handleSubmit}>
@@ -122,9 +101,5 @@ const LoginForm = () => {
       </LoginFormContainer>
     </LoginContainer>
     )};
-    </div>
-  );
-  
-};
 
 export default LoginForm;
