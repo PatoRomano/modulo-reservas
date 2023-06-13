@@ -14,6 +14,20 @@ export async function getEspacios() {
     }
 }
 
+export async function getEspaciosEmpresa(id) {
+    try {
+        const response = await Axios({
+            url: `${baseUrl}/getEspacioFindOne/${id}`,
+            method: "POST",
+        });
+    return response;
+    } catch (e) {
+    console.log("error"+e);
+    }
+}
+
+
+
 export async function getEspaciosById(id) {
     try {
         const response = await Axios({

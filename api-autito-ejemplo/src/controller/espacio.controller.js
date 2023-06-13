@@ -7,7 +7,10 @@ const getEspacios = async (req,res)  => {
 
 const getEspacioFindOne = async (req,res)  => {
     const {id_empresa} = req.body;
-    const response = await pool.query('SELECT es.id, es.nombre as nombreespacio, es.precio_hora, es.hora_inicio, es.hora_fin FROM espacios es where es.id_tipo = 1 and es.id_empresa = $1',[id_empresa]);
+    const response = await pool.query('SELECT es.id, es.nombre as nombreespacio, es.precio_hora, '
+    +'es.hora_inicio, es.hora_fin FROM espacios es '
+    +'INNER JOIN tipo_espacio as te ON te.id = es.id_tipo '
+    +'where te.id_padre = 1 and id_empresa  = $1',[id_empresa]);
     res.status(200).json(response.rows);
 }
 
