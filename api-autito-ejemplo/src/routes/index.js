@@ -7,8 +7,8 @@ const { getEspacios,setEspacio, getEspacioDeportes} = require('../controller/esp
 const { getHorarios,setHorario} = require('../controller/horarios.controller');
 const { getReservas,setReserva} = require('../controller/reserva.controller');
 const { getServicios,setServicio} = require('../controller/servicio.controller');
-const { getEspacioServicios,setEspacioServicio} = require('../controller/espacioservicio.controller');
-const { getReservasHorarios,setReservaHorario} = require('../controller/reservashorarios.controller');
+const { getEspacioServicios,setEspacioServicio,espacioServicios,servicioEspacios} = require('../controller/espacioservicio.controller');
+const { getReservasHorarios,setReservaHorario,reservaHorarios,horarioReservas} = require('../controller/reservashorarios.controller');
 //Getters
 router.get('/empresas', getEmpresas);
 router.get('/espacio', getEspacios);
@@ -48,5 +48,10 @@ router.post('/setReservaHorario', setReservaHorario);
 
 router.post('/setTipo', setTipo);
 router.post('/setUser', setUser);
+
+router.post('/espacioServicios', espacioServicios); //A partir del id de un espacio devuelve los servicios del mismo
+router.post('/servicioEspacios', servicioEspacios); //A partir del id de un servicio devuelve los espacios que tienen ese servicio
+router.post('/reservaHorarios', reservaHorarios); //A partir del id de una reserva devuelve los horarios del mismo
+router.post('/horarioReservas', horarioReservas); //A partir del id de un horario devuelve las reservas que estén en ese horario
 
 module.exports = router;
