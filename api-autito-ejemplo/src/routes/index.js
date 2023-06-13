@@ -3,7 +3,7 @@ const router = Router();
 const { getUsers, findOne, setUser} = require('../controller/usuario.controller');
 const { getTiposDeportes, getTiposDepartamentos, getTiposSalones, getTipos, setTipo} = require('../controller/tipoespacio.controller');
 const { getEmpresas,setEmpresa, getEmpresasDeportes, getEmpresasSalones,getEmpresasDepartamentos} = require('../controller/empresaController');
-const { getEspacios,setEspacio, getEspacioDeportes} = require('../controller/espacio.controller');
+const { getEspacios,setEspacio, getEspacioDeportes, getEspacioFindOne} = require('../controller/espacio.controller');
 const { getHorarios,setHorario} = require('../controller/horarios.controller');
 const { getReservas,setReserva} = require('../controller/reserva.controller');
 const { getServicios,setServicio} = require('../controller/servicio.controller');
@@ -53,5 +53,7 @@ router.post('/espacioServicios', espacioServicios); //A partir del id de un espa
 router.post('/servicioEspacios', servicioEspacios); //A partir del id de un servicio devuelve los espacios que tienen ese servicio
 router.post('/reservaHorarios', reservaHorarios); //A partir del id de una reserva devuelve los horarios del mismo
 router.post('/horarioReservas', horarioReservas); //A partir del id de un horario devuelve las reservas que estén en ese horario
+
+router.post('/getEspacioFindOne', getEspacioFindOne); //A partir del id de la empresa devuelve el espacio
 
 module.exports = router;

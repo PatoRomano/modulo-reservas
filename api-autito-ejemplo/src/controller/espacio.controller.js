@@ -5,6 +5,12 @@ const getEspacios = async (req,res)  => {
     res.status(200).json(response.rows);
 }
 
+const getEspacioFindOne = async (req,res)  => {
+    const {id_empresa} = req.body;
+    const response = await pool.query('SELECT es.id, es.nombre as nombreespacio, es.precio_hora, es.hora_inicio, es.hora_fin FROM espacios es where es.id_tipo = 1 and es.id_empresa = $1',[id_empresa]);
+    res.status(200).json(response.rows);
+}
+
 const getEspacioDeportes = async (req, res) => {
     const query = 'SELECT e.nombre as espacio, tp.nombre as tipo, tp.capacidad, e.precio_hora as precio  FROM espacios e '+
     'INNER JOIN tipo_espacio tp on tp.id = e.id_tipo where tp.id_padre = 1';
@@ -28,4 +34,4 @@ const setEspacio = async (req,res)  => {
     console.log(req);
 }
 
-module.exports = {getEspacios,setEspacio, getEspacioDeportes}
+module.exports = {getEspacios,setEspacio, getEspacioDeportes, getEspacioFindOne}
