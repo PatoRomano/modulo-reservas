@@ -1,5 +1,11 @@
 const pool = require('../config/db');
 
+const getReservas = async (req,res)  => {
+    const {id_empresa} = req.body;
+    const response = await pool.query('SELECT r.id, es.nombre, r.fecha_fin as fecha, r.hora_inicio, r.hora_fin FROM reservas r JOIN espacios es ON es.id = r.id_espacio JOIN empresa em ON em.id = es.id_empresa WHERE em.id = $1',[id_empresa])
+    res.status(200).json(response.rows);
+}
+
 const getReservasDeporte = async (req,res)  => {
     const {id_espacio} = req.body;
     let date = new Date()
@@ -28,4 +34,4 @@ const setReservaDeporte = async (req,res)  => {
     console.log(req);
 }
 
-module.exports = {getReservasDeporte,setReservaDeporte}
+module.exports = {getReservasDeporte,setReservaDeporte,getReservas}
