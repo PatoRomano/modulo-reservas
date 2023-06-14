@@ -14,11 +14,12 @@ export async function getEspacios() {
     }
 }
 
-export async function getEspaciosEmpresa(id) {
+export async function getEspaciosEmpresaDeportes(data) {
     try {
         const response = await Axios({
-            url: `${baseUrl}/getEspacioFindOne/${id}`,
+            url: `${baseUrl}/getEspacioFindOne`,
             method: "POST",
+            data: data
         });
     return response;
     } catch (e) {

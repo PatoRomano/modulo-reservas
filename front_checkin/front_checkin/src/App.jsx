@@ -29,7 +29,7 @@ function App() {
           <Route path="/administrador" element= {<RequireAuth loginPath='/login'>
             <Administrador /></RequireAuth>} ></Route>
           <Route path="/crearespacio" element= {<RequireAuth loginPath='/login'><CrearEspacio /></RequireAuth>} ></Route>
-          <Route path="/reserva" element= {<Reserva />} ></Route>
+          <Route path="/reserva/:id" element= {<Reserva />} ></Route>
       </Routes>
     </div>
     </>

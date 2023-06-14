@@ -12,7 +12,7 @@ const { getClientes,getClientePorId,getClientePorDni,setCliente} = require('../c
 //Getters
 router.get('/empresas', getEmpresas);
 router.get('/espacio', getEspacios);
-router.get('/reservasDeportes', getReservasDeporte);
+router.post('/reservasDeportes', getReservasDeporte);
 router.get('/reservas', getReservas);
 router.get('/servicios', getServicios);
 router.get('/espacioservicio', getEspacioServicios);

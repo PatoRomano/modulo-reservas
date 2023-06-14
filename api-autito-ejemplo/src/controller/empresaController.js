@@ -6,19 +6,19 @@ const getEmpresas = async (req,res)  => {
 }
 
 const getEmpresasDeportes = async (req,res)  => {
-    const response = await pool.query('SELECT e.* FROM empresa e INNER JOIN '+
+    const response = await pool.query('SELECT DISTINCT e.* FROM empresa e INNER JOIN '+
     'espacios es ON es.id_empresa = e.id INNER JOIN tipo_espacio te ON te.id = es.id_tipo WHERE te.id_padre = 1')
     res.status(200).json(response.rows);
 }
 
 const getEmpresasDepartamentos = async (req,res)  => {
-    const response = await pool.query('SELECT e.* FROM empresa e INNER JOIN '+
+    const response = await pool.query('SELECT DISTINCT e.* FROM empresa e INNER JOIN '+
     'espacios es ON es.id_empresa = e.id INNER JOIN tipo_espacio te ON te.id = es.id_tipo WHERE te.id = 2')
     res.status(200).json(response.rows);
 }
 
 const getEmpresasSalones = async (req,res)  => {
-    const response = await pool.query('SELECT e.* FROM empresa e INNER JOIN '+
+    const response = await pool.query('SELECT DISTINCT e.* FROM empresa e INNER JOIN '+
     'espacios es ON es.id_empresa = e.id INNER JOIN tipo_espacio te ON te.id = es.id_tipo WHERE te.id = 3')
     res.status(200).json(response.rows);
 }
