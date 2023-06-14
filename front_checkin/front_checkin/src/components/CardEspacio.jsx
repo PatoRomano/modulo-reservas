@@ -1,6 +1,6 @@
 import React from 'react';
 import '../styled-components/card.css'; // Importa el archivo CSS de estilos
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Button = styled.button`
@@ -17,15 +17,23 @@ const Button = styled.button`
     background-color: #0d8bf2;
   }
 `;
-const CardEspacio = ({ imageSrc, title }) => {
+const CardEspacio = ({ imageSrc, title, precio, id }) => {
     return (
         <div className="card">
             <img src={imageSrc} alt="Image" className="card-image" />
             <div className="card-content">
                 <h1>{title}</h1>
             </div>
-            <Link to='/reserva'>
-            <Button>Reservar</Button>
+            {precio ? (
+            <div className="card-content">
+                <h3>{precio}</h3>
+            </div>) : null}
+            
+            <Link to={`/reserva/${id}`}>
+           
+            <Button>Seleccionar</Button>
+          
+            
             </Link>
         </div>
     );

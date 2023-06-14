@@ -1,9 +1,23 @@
 import React, { useEffect, useState } from "react";
 import CardEspacio from "../../components/CardEspacio";
 import Modal from "../../components/Modal";
-const Reserva = () => {
-  const [showModal, setShowModal] = useState(false);
+import { useParams } from "react-router-dom";
 
+import { getEspaciosEmpresaDeportes } from "../../services/espacios/espacio";
+
+const Reserva = () => {
+  const { id } = useParams();
+  const [showModal, setShowModal] = useState(false);
+  const [espacios, setEspacios] = useState([]);
+  const [idEspacio, setIdEspacio] = useState("");
+  const showData = async () => {
+    const data = { id_empresa: id };
+    const dataEspacios = await getEspaciosEmpresaDeportes(data);
+    setEspacios(dataEspacios.data);
+  };
+  useEffect(() => {
+    showData();
+  }, []);
   const openModal = () => {
     setShowModal(true);
   };
@@ -12,16 +26,31 @@ const Reserva = () => {
     setShowModal(false);
   };
 
+  const handleModal = (id) =>{
+    setIdEspacio(id);
+    openModal();
+  }
+
   return (
     <>
       <div className="container">
         <h1>Reservas</h1>
-        <CardEspacio imageSrc="vasxmas.jpg" title="Cancha de 7" />
-        <CardEspacio imageSrc="vasxmas.jpg" title="Cancha de 5" />
-        <button onClick={openModal}>Abrir Modal</button>
+        {espacios.map((elemento) => (
+          <>
+            <div className="">
+              <h1>{elemento.nombreespacio}</h1>
+            </div>
+            <div className="">
+              <h3>{elemento.precio_hora }</h3>
+            </div>
+            <div>
+            <button onClick={() => handleModal(elemento.id)}>Reservar</button>
+            </div>
+          </>
+        ))}
 
         {showModal && (
-          <Modal onClose={closeModal}>{/* Contenido del modal */}</Modal>
+          <Modal onClose={closeModal} datosReserva={idEspacio}></Modal>
         )}
       </div>
     </>

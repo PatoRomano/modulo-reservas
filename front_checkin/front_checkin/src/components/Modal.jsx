@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import ButtonBook from "./ButtonBook";
+import { getReservasDeportes } from "../services/reservas/reservas";
+import Calendar from "react-calendar";
 
 const ModalContainer = styled.div`
   position: fixed;
@@ -43,34 +45,106 @@ const CloseButton = styled.button`
   font-size: 20px;
   cursor: pointer;
 `;
+const CalendarContainer = styled.div`
+  .disponible {
+    background-color: green;
+  }
 
-const Modal = ({ onClose, children }) => {
+  .no-disponible {
+    background-color: red;
+  }
+`;
+const Modal = ({ onClose, children, datosReserva }) => {
   const { register, handleSubmit } = useForm();
+  const [reservas, setReservas] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [fechasDisponibles, setFechasDisponibles] = useState([]);
+  const [fechasNoDisponibles, setFechasNoDisponibles] = useState([]);
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const countReservasPorDia = (fecha) => {
+    const reservasDia = reservas.filter((reserva) => {
+      const fechaReserva = new Date(reserva.fecha_inicio);
+      return (
+        fechaReserva.getFullYear() === fecha.getFullYear() &&
+        fechaReserva.getMonth() === fecha.getMonth() &&
+        fechaReserva.getDate() === fecha.getDate()
+      );
+    });
+
+    return reservasDia.length;
   };
 
+  const showData = async () => {
+    const data = { id_empresa: datosReserva };
+    const dataReservas = await getReservasDeportes(data);
+    setReservas(dataReservas.data);
+
+    const fechasDisponibles = [];
+    const fechasNoDisponibles = [];
+
+    const fechaActual = new Date();
+    const fechaMaxima = new Date();
+    fechaMaxima.setDate(fechaMaxima.getDate() + 7);
+
+    const fechaRecorrido = new Date(fechaActual);
+
+    while (fechaRecorrido <= fechaMaxima) {
+      const reservasDia = countReservasPorDia(fechaRecorrido);
+
+      if (reservasDia < 8) {
+        fechasDisponibles.push(fechaRecorrido);
+      } else {
+        fechasNoDisponibles.push(fechaRecorrido);
+      }
+
+      fechaRecorrido.setDate(fechaRecorrido.getDate() + 1);
+    }
+
+    setFechasDisponibles(fechasDisponibles);
+    setFechasNoDisponibles(fechasNoDisponibles);
+  };
+
+  useEffect(() => {
+    showData();
+  }, []);
+
+  const onSubmit = (data) => {
+    console.log(reservas);
+  };
+  
   return (
     <ModalContainer>
-        
       <ModalContent>
-      <CloseButton onClick={onClose}>x</CloseButton>
+        <CloseButton onClick={onClose}>x</CloseButton>
         <div>
-        <form onSubmit={handleSubmit}>
-          <Label htmlFor="">Fecha</Label>
-          <Input type="date" {...register("fecha")} />
+          <form onSubmit={handleSubmit}>
+            <Label htmlFor="">Fecha</Label>
+            <Input type="date" {...register("fecha")} />
 
-          <ButtonBook type="submit" onButtonClick={handleSubmit(onSubmit)}>
-            Guardar
-          </ButtonBook>
-          
-        </form>
+            <ButtonBook type="submit" onButtonClick={handleSubmit(onSubmit)}>
+              Guardar
+            </ButtonBook>
+          </form>
         </div>
         {children}
-        <div>
-        
-        </div>
+        <CalendarContainer>
+          <Calendar
+            value={selectedDate}
+            onChange={setSelectedDate}
+            tileDisabled={({ date }) =>
+              !fechasDisponibles.some((fecha) =>
+                isSame(new Date(fecha), date)
+              )
+            }
+            tileClassName={({ date }) =>
+              fechasNoDisponibles.some((fecha) =>
+                isSame(new Date(fecha), date)
+              )
+                ? "no-disponible"
+                : "disponible"
+            }
+          />
+        </CalendarContainer>
       </ModalContent>
     </ModalContainer>
   );
