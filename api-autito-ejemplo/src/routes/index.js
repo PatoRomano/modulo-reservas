@@ -5,8 +5,10 @@ const { getTiposDeportes, getTiposDepartamentos, getTiposSalones, getTipos, setT
 const { getEmpresas,setEmpresa, getEmpresasDeportes, getEmpresasSalones,getEmpresasDepartamentos} = require('../controller/empresaController');
 const { getEspacios,setEspacio, getEspacioDeportes, getEspacioFindOne} = require('../controller/espacio.controller');
 const { getReservasDeporte,setReservaDeporte,getReservas} = require('../controller/reserva.controller');
-const { getServicios,setServicio} = require('../controller/servicio.controller');
+const { getServicios,setServicio,getServiciosPorTipo} = require('../controller/servicio.controller');
 const { getEspacioServicios,setEspacioServicio,espacioServicios,servicioEspacios} = require('../controller/espacioservicio.controller');
+const { getClientes,getClientePorId,getClientePorDni,setCliente} = require('../controller/cliente.controller');
+
 //Getters
 router.get('/empresas', getEmpresas);
 router.get('/espacio', getEspacios);
@@ -14,6 +16,7 @@ router.get('/reservasDeportes', getReservasDeporte);
 router.get('/reservas', getReservas);
 router.get('/servicios', getServicios);
 router.get('/espacioservicio', getEspacioServicios);
+router.get('/clientes', getClientes);
 
 //routes get usuarios
 router.get('/usuarios', getUsers);
@@ -39,6 +42,7 @@ router.post('/setEmpresa', setEmpresa);
 router.post('/setEspacio', setEspacio);
 router.post('/setReserva', setReservaDeporte);
 router.post('/setServicio', setServicio);
+router.post('/getServiciosPorTipo', getServiciosPorTipo);
 router.post('/setEspacioServicio', setEspacioServicio);
 
 router.post('/setTipo', setTipo);
@@ -48,5 +52,9 @@ router.post('/espacioServicios', espacioServicios); //A partir del id de un espa
 router.post('/servicioEspacios', servicioEspacios); //A partir del id de un servicio devuelve los espacios que tienen ese servicio
 
 router.post('/getEspacioFindOne', getEspacioFindOne); //A partir del id de la empresa devuelve el espacio
+
+router.post('/getClientePorId', getClientePorId);
+router.post('/getClientePorDni', getClientePorDni);
+router.post('/setCliente', setCliente);
 
 module.exports = router;
