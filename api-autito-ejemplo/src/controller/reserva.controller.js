@@ -27,44 +27,31 @@ const getReservaPorFecha = async (req,res)  => {
 }
 
 const setReservaDeporte = async (req,res)  => {
-    //const {id_usuario,id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin} = req.body;
-    const {hora_inicio,hora_fin} = req.body;
-    var hora = new Date()
-    hora.setHours(hora_inicio.substring(0,1),hora_inicio.substring(3,4),hora_inicio.substring(6,7))
-    console.log(hora)
-    /*var horaInicio = hora_inicio
-    hora = parseInt(horaInicio.charAt(1))
-    ++hora
-    if (hora == 10) {
-        hora = parseInt(horaInicio.charAt(0))
-        ++hora
-        var horaFin = horaInicio.replace(horaInicio.charAt(0),hora)
-        horaFin = horaInicio.replace(horaInicio.charAt(1),0)
-    } else {
-        
+    const {id_usuario,id_espacio,fecha,hora_inicio,hora_fin,id_cliente} = req.body;
+    var horaInicio = new Date()
+    var horaFin = new Date()
+    var horario = parseInt(hora_inicio.substring(0,2))
+    horaInicio.setHours(horario)
+    horario = parseInt(hora_fin.substring(0,2))
+    horaFin.setHours(horario)
+
+    var horaActual = new Date()
+    horaActual.setHours(horaInicio.getHours()+1)
+
+    while (horaInicio.getHours() < horaFin.getHours()) {
+        const response = await pool.query('INSERT INTO reservas (id_usuario,id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin,id_cliente) VALUES ($1, $2, $3, $4, $5, $6, $7)',[id_usuario,id_espacio,fecha,fecha,horaInicio.getHours()+":00:00",horaActual.getHours()+":00:00",id_cliente]);
+        console.log("entra con "+horaInicio.getHours()+" hasta "+horaActual.getHours())
+        horaInicio.setHours(horaInicio.getHours()+1)
+        horaActual.setHours(horaActual.getHours()+1)
     }
-    var horaFin = horaInicio.replace(horaInicio.charAt(1),hora)
-    while (horaInicio != hora_fin) {
-        console.log("Entro a las: "+horaInicio+" y se va a las "+horaFin)
-        hora = parseInt(horaInicio.charAt(1))
-        ++hora
-        horaInicio = horaInicio.replace(horaInicio.charAt(1),hora)    //Reemplaza por ejemplo de 20 a 21
-        ++hora
-        horaFin = horaInicio.replace(horaInicio.charAt(1),hora)
-    }/*     ACAAAAAAAA
-    
-    //horaCuenta.setHours(hora_inicio) 
-    
-    //console.log(++hora)
-    /*const response = await pool.query('INSERT INTO reservas (id_usuario,id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin) VALUES ($1, $2, $3, $4, $5, $6)',[id_usuario,id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin]);
 
     res.status(200).json({
-        message:'empresa agregada correctamente',
+        message:'Reserva agregada correctamente',
         body:{
-            reserva:{id_usuario,id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin}
+            reserva:{id_usuario,id_espacio,fecha,hora_inicio,hora_fin,id_cliente}
         }
     });    
-    console.log(req);*/
+    console.log(req);
 }
 
 module.exports = {getReservasDeporte,setReservaDeporte,getReservas,getReservaPorFecha}
