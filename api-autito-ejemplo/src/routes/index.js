@@ -36,7 +36,6 @@ router.get('/empresasDeportes', getEmpresasDeportes);
 router.get('/empresasSalones', getEmpresasSalones);
 router.get('/empresasDepartamentos', getEmpresasDepartamentos);
 
-
 //SETTERS
 router.post('/setEmpresa', setEmpresa);
 router.post('/setEspacio', setEspacio);
