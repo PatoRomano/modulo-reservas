@@ -20,6 +20,12 @@ const getReservasDeporte = async (req,res)  => {
     res.status(200).json(response.rows);
 }
 
+const getReservaPorFecha = async (req,res)  => {
+    const {id_espacio, fecha} = req.body;
+    const response = await pool.query('SELECT hora_inicio FROM reservas WHERE id_espacio = $1 AND fecha_inicio = $2',[id_espacio, fecha])
+    res.status(200).json(response.rows);
+}
+
 const setReservaDeporte = async (req,res)  => {
     const {id_usuario,id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin} = req.body;
     const response = await pool.query('INSERT INTO reservas (id_usuario,id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin) VALUES ($1, $2, $3, $4, $5, $6)',[id_usuario,id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin]);
@@ -32,4 +38,4 @@ const setReservaDeporte = async (req,res)  => {
     console.log(req);
 }
 
-module.exports = {getReservasDeporte,setReservaDeporte,getReservas}
+module.exports = {getReservasDeporte,setReservaDeporte,getReservas,getReservaPorFecha}
