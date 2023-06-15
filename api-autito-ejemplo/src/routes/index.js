@@ -4,7 +4,7 @@ const { getUsers, findOne, setUser} = require('../controller/usuario.controller'
 const { getTiposDeportes, getTiposDepartamentos, getTiposSalones, getTipos, setTipo} = require('../controller/tipoespacio.controller');
 const { getEmpresas,setEmpresa, getEmpresasDeportes, getEmpresasSalones,getEmpresasDepartamentos} = require('../controller/empresaController');
 const { getEspacios,setEspacio, getEspacioDeportes, getEspacioFindOne} = require('../controller/espacio.controller');
-const { getReservasDeporte,setReservaDeporte,getReservas,getReservaPorFecha} = require('../controller/reserva.controller');
+const { getReservasDeporte,setReservaDeporte,getReservas,getReservaPorFecha,reservarSinIdCliente} = require('../controller/reserva.controller');
 const { getServicios,setServicio,getServiciosPorTipo} = require('../controller/servicio.controller');
 const { getEspacioServicios,setEspacioServicio,espacioServicios,servicioEspacios} = require('../controller/espacioservicio.controller');
 const { getClientes,getClientePorId,getClientePorDni,setCliente} = require('../controller/cliente.controller');
@@ -56,5 +56,6 @@ router.post('/getEspacioFindOne', getEspacioFindOne); //A partir del id de la em
 router.post('/getClientePorId', getClientePorId);
 router.post('/getClientePorDni', getClientePorDni);
 router.post('/setCliente', setCliente);
+router.post('/reservarSinIdCliente', reservarSinIdCliente);
 
 module.exports = router;
