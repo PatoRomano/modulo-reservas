@@ -53,3 +53,16 @@ export async function saveEspacio(espacioData) {
     console.log(e);
     }
 }
+
+export async function getEspaciosEmpresas(data) {
+    try {
+        const response = await Axios({
+            url: `${baseUrl}/espaciosEmpresa`,
+            method: "POST",
+            data: data
+        });
+    return response;
+    } catch (e) {
+    console.log("error"+e);
+    }
+}

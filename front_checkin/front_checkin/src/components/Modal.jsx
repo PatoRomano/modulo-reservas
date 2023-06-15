@@ -30,7 +30,7 @@ const ModalContent = styled.div`
 const CardDisponible = styled.button`
   display: flex;
   flex-direction: column;
-  background-color: green;
+  background-color: ${({ active }) => (active ? 'blue' : 'grey')};
   cursor: pointer;
   margin: 5px;
 `;
@@ -141,7 +141,22 @@ const Modal = ({ onClose, children, datosReserva }) => {
   const [reservas, setReservas] = useState([]);
   const [selectFecha, setSelectFecha] = useState(null);
   const [horario, setHorario] = useState("");
+  const [horas, setHora] = useState([]);
+  const [isActive, setIsActive] = useState(false);
 
+  function handleHora (fhora) {
+    setIsActive(!isActive);
+    if(isActive){
+      setHora([...horas,fhora]);
+    }else{
+      const newArray = horas.filter((element) => element !== fhora);
+      setHora(newArray);
+    }
+    setIsActive(!isActive);
+    console.log(fhora);
+   
+  }
+  
   const cargarHorario = () => {
     const hora_inicio_string = datosReserva.hora_inicio;
     const [horasInicio, minutosInicio, segundosInicio] =
@@ -172,14 +187,23 @@ const Modal = ({ onClose, children, datosReserva }) => {
       datosReserva.hora_inicio.split(":");
     const [horasFin, minutosFin, segundosFin] =
       datosReserva.hora_fin.split(":");
-
-    const fechaInicio = addHours(new Date(), horasInicio);
-    const fechaFin = addHours(new Date(), horasFin);
-
-    const horas = eachHourOfInterval({
-      start: fechaInicio.setHours(fechaInicio.getHours() - 1),
-      end: fechaFin.setHours(fechaFin.getHours() - 1),
-    });
+    
+      const fechaInicio = new Date();
+      fechaInicio.setHours(horasInicio, minutosInicio, segundosInicio);
+      
+      const fechaFin = new Date();
+      fechaFin.setHours(horasFin, minutosFin, segundosFin);
+      
+      const fechaInicioModificada = new Date(fechaInicio);
+      fechaInicioModificada.setHours(fechaInicio.getHours() + 1);
+      
+      const fechaFinModificada = new Date(fechaFin);
+      fechaFinModificada.setHours(fechaFin.getHours() + 1 );
+      
+      const horas = eachHourOfInterval({
+        start: fechaInicioModificada,
+        end: fechaFinModificada,
+      });
 
     const horariosDisponibles = horas.map((hora) => {
       hora.setHours(hora.getHours() - 1);
@@ -191,13 +215,10 @@ const Modal = ({ onClose, children, datosReserva }) => {
         ":" +
         hora.getSeconds() +
         hora.getSeconds();
-      console.log(fhora);
       if (reservasHorarios.includes(fhora)) {
         return (
           <>
             <CardNoDisponible
-              type="submit"
-              onButtonClick={handleSubmit(onSubmit)}
               key={fhora}
             >
               {fhora}
@@ -208,9 +229,10 @@ const Modal = ({ onClose, children, datosReserva }) => {
         return (
           <>
             <CardDisponible
-              type="submit"
-              onButtonClick={handleSubmit(onSubmit)}
+              value = {fhora}
+              type = ""
               key={fhora}
+              onDoubleClick={()=>{handleHora(fhora)}}
             >
               {fhora}
             </CardDisponible>
@@ -267,8 +289,10 @@ const Modal = ({ onClose, children, datosReserva }) => {
       verHorariosDisponibles();
     }
   };
-
+  
   const onSubmit = (data, e) => {
+   
+    console.log(horas);
     e.preventDefault();
   };
 
@@ -289,7 +313,10 @@ const Modal = ({ onClose, children, datosReserva }) => {
         <Label htmlFor="">
             {selectFecha}
           </Label>
-          {verHorariosDisponibles()}
+          {selectFecha ?
+          (verHorariosDisponibles()):null
+          }
+          
           </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>

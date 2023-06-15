@@ -36,5 +36,9 @@ const setEspacio = async (req,res)  => {
     });    
     console.log(req);
 }
-
-module.exports = {getEspacios,setEspacio, getEspacioDeportes, getEspacioFindOne}
+const getEspaciosPorEmpresa = async (req, res) => {
+    const {id_empresa} = req.body;
+    const response = await pool.query('SELECT * FROM espacios WHERE id_empresa = $1',[id_empresa]);
+    res.status(200).json(response.rows);    
+}
+module.exports = {getEspacios,setEspacio, getEspacioDeportes, getEspacioFindOne, getEspaciosPorEmpresa}
