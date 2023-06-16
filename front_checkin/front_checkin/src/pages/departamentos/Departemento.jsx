@@ -22,7 +22,7 @@ const Departamento = () => {
       <div className="container">
         <h1>Departamentos</h1>
         {empresas.map((elemento) => (
-          <CardEspacio imageSrc="vasxmas.jpg" title={elemento.nombre} />
+          <CardEspacio imageSrc="vasxmas.jpg" title={elemento.nombre} tipo = {2} />
         ))}
       </div>
     </>

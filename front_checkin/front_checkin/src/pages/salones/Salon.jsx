@@ -9,7 +9,6 @@ const Salon = () => {
   const showData = async () => {
     const dataEmpresas = await getEmpresasSalones();
     setEmpresas(dataEmpresas.data);
-    console.log(dataEmpresas);
   };
 
   useEffect(() => {
@@ -21,7 +20,7 @@ const Salon = () => {
       <div className="container">
         <h1>Salones</h1>
         {empresas.map((elemento) => (
-          <CardEspacio imageSrc="vasxmas.jpg" title={elemento.nombre} />
+          <CardEspacio imageSrc="vasxmas.jpg" title={elemento.nombre} id={elemento.id} tipo = {3}/>
         ))}
       </div>
     </>

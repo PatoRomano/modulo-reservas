@@ -17,7 +17,7 @@ const Button = styled.button`
     background-color: #0d8bf2;
   }
 `;
-const CardEspacio = ({ imageSrc, title, precio, id }) => {
+const CardEspacio = ({ imageSrc, title, precio, id, tipo}) => {
     return (
         <div className="card">
             <img src={imageSrc} alt="Image" className="card-image" />
@@ -29,7 +29,7 @@ const CardEspacio = ({ imageSrc, title, precio, id }) => {
                 <h3>{precio}</h3>
             </div>) : null}
             
-            <Link to={`/reserva/${id}`}>
+            <Link to={`/reserva/${id}/${tipo}`}>
            
             <Button>Seleccionar</Button>
           

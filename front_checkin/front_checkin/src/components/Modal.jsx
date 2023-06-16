@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import ButtonBook from "./ButtonBook";
-import { getReservasDeportes } from "../services/reservas/reservas";
+import { getReservasDeportes} from "../services/reservas/reservas";
 import Calendar from "react-calendar";
 import { addHours, eachHourOfInterval, format, parseISO } from "date-fns";
+import { useAuthUser } from "react-auth-kit";
 
 const ModalContainer = styled.div`
   position: fixed;
@@ -21,7 +22,7 @@ const ModalContainer = styled.div`
 const ModalContent = styled.div`
   position: relative;
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr; /* Dos columnas de igual tamaño */
+  grid-template-columns: 2fr 1fr 0.2fr 1fr; /* Dos columnas de igual tamaño */
   gap: 20px; /* Espacio entre las columnas */
   background-color: #fff;
   padding: 20px;
@@ -30,7 +31,7 @@ const ModalContent = styled.div`
 const CardDisponible = styled.button`
   display: flex;
   flex-direction: column;
-  background-color: ${({ active }) => (active ? 'blue' : 'grey')};
+  background-color: gray;
   cursor: pointer;
   margin: 5px;
 `;
@@ -141,22 +142,22 @@ const Modal = ({ onClose, children, datosReserva }) => {
   const [reservas, setReservas] = useState([]);
   const [selectFecha, setSelectFecha] = useState(null);
   const [horario, setHorario] = useState("");
-  const [horas, setHora] = useState([]);
-  const [isActive, setIsActive] = useState(false);
+  const [hora, setHora] = useState("");
+  const authUser = useAuthUser();
+  const isAuthenticated = authUser();
+  const { id } = isAuthenticated || {};
 
-  function handleHora (fhora) {
-    setIsActive(!isActive);
-    if(isActive){
-      setHora([...horas,fhora]);
-    }else{
-      const newArray = horas.filter((element) => element !== fhora);
-      setHora(newArray);
+
+
+
+  function handleHora(fhora) {
+    if (hora == fhora) {
+      setHora("");
+    } else {
+      setHora(fhora);
     }
-    setIsActive(!isActive);
-    console.log(fhora);
-   
   }
-  
+
   const cargarHorario = () => {
     const hora_inicio_string = datosReserva.hora_inicio;
     const [horasInicio, minutosInicio, segundosInicio] =
@@ -187,23 +188,23 @@ const Modal = ({ onClose, children, datosReserva }) => {
       datosReserva.hora_inicio.split(":");
     const [horasFin, minutosFin, segundosFin] =
       datosReserva.hora_fin.split(":");
-    
-      const fechaInicio = new Date();
-      fechaInicio.setHours(horasInicio, minutosInicio, segundosInicio);
-      
-      const fechaFin = new Date();
-      fechaFin.setHours(horasFin, minutosFin, segundosFin);
-      
-      const fechaInicioModificada = new Date(fechaInicio);
-      fechaInicioModificada.setHours(fechaInicio.getHours() + 1);
-      
-      const fechaFinModificada = new Date(fechaFin);
-      fechaFinModificada.setHours(fechaFin.getHours() + 1 );
-      
-      const horas = eachHourOfInterval({
-        start: fechaInicioModificada,
-        end: fechaFinModificada,
-      });
+
+    const fechaInicio = new Date();
+    fechaInicio.setHours(horasInicio, minutosInicio, segundosInicio);
+
+    const fechaFin = new Date();
+    fechaFin.setHours(horasFin, minutosFin, segundosFin);
+
+    const fechaInicioModificada = new Date(fechaInicio);
+    fechaInicioModificada.setHours(fechaInicio.getHours() + 1);
+
+    const fechaFinModificada = new Date(fechaFin);
+    fechaFinModificada.setHours(fechaFin.getHours() + 1);
+
+    const horas = eachHourOfInterval({
+      start: fechaInicioModificada,
+      end: fechaFinModificada,
+    });
 
     const horariosDisponibles = horas.map((hora) => {
       hora.setHours(hora.getHours() - 1);
@@ -218,21 +219,19 @@ const Modal = ({ onClose, children, datosReserva }) => {
       if (reservasHorarios.includes(fhora)) {
         return (
           <>
-            <CardNoDisponible
-              key={fhora}
-            >
-              {fhora}
-            </CardNoDisponible>
+            <CardNoDisponible key={fhora}>{fhora}</CardNoDisponible>
           </>
         );
       } else {
         return (
           <>
             <CardDisponible
-              value = {fhora}
-              type = ""
+              value={fhora}
+              type=""
               key={fhora}
-              onDoubleClick={()=>{handleHora(fhora)}}
+              onDoubleClick={() => {
+                handleHora(fhora);
+              }}
             >
               {fhora}
             </CardDisponible>
@@ -289,10 +288,18 @@ const Modal = ({ onClose, children, datosReserva }) => {
       verHorariosDisponibles();
     }
   };
-  
-  const onSubmit = (data, e) => {
-   
-    console.log(horas);
+
+  const onSubmit = async (data, e) => {
+
+    const jsonData = {"nombre":data.nombre,"apellido":data.apellido,
+    "correo":data.correo, "contacto":data.contacto, "id_usuario":id,
+    "id_espacio":datosReserva.id, "hora_incio":hora,"hora_fin":hora}
+    // try{
+    //   saveReservasVisitante(jsonData)
+    // }catch(error){
+    //   console.log("erro al guardar reserva deporte-salon: "+error)
+    // }
+    console.log(jsonData)
     e.preventDefault();
   };
 
@@ -310,17 +317,13 @@ const Modal = ({ onClose, children, datosReserva }) => {
           </CalendarContainer>
         </div>
         <div>
-        <Label htmlFor="">
-            {selectFecha}
-          </Label>
-          {selectFecha ?
-          (verHorariosDisponibles()):null
-          }
-          
-          </div>
-
+          <Label htmlFor="">{selectFecha}</Label>
+          {selectFecha ? verHorariosDisponibles() : null}
+        </div>
+        <div>
+              <Label>{hora}</Label>
+        </div>
         <form onSubmit={handleSubmit(onSubmit)}>
-         
           <Label>Nombre:</Label>
           <Input type="text" {...register("nombre")} />
           <Label>Apellido:</Label>

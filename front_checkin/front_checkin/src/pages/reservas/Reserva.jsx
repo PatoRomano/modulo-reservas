@@ -3,17 +3,29 @@ import CardEspacio from "../../components/CardEspacio";
 import Modal from "../../components/Modal";
 import { useParams } from "react-router-dom";
 
-import { getEspaciosEmpresaDeportes } from "../../services/espacios/espacio";
+import { getEspaciosEmpresaDeportes, getEspaciosEmpresaSalones } from "../../services/espacios/espacio";
 
 const Reserva = () => {
-  const { id } = useParams();
+  const { id, tipo} = useParams();
   const [showModal, setShowModal] = useState(false);
   const [espacios, setEspacios] = useState([]);
   const [dataEspacio, setDataEspacio] = useState("");
+
+  
   const showData = async () => {
     const data = { id_empresa: id };
-    const dataEspacios = await getEspaciosEmpresaDeportes(data);
-    setEspacios(dataEspacios.data);
+    if(tipo == 1){
+      const dataEspacios = await getEspaciosEmpresaDeportes(data);
+      setEspacios(dataEspacios.data);
+    }else if(tipo == 3){
+      console.log("entre");
+      const dataEspacios = await getEspaciosEmpresaSalones(data);
+      setEspacios(dataEspacios.data);
+      console.log(dataEspacios.data)
+    }else{
+
+    }
+  
   };
   useEffect(() => {
     showData();

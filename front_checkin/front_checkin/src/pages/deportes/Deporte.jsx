@@ -21,7 +21,7 @@ const Deporte = () => {
         <div className="container">
             <h1>Deportes</h1>
             {empresas.map((elemento)=>(
-                <CardEspacio imageSrc="vasxmas.jpg" title={elemento.nombre} id={elemento.id}/>
+                <CardEspacio imageSrc="vasxmas.jpg" title={elemento.nombre} id={elemento.id} tipo = {1}/>
             ))}
             
         </div>

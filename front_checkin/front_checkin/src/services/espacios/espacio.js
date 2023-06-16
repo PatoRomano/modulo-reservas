@@ -27,6 +27,19 @@ export async function getEspaciosEmpresaDeportes(data) {
     }
 }
 
+export async function getEspaciosEmpresaSalones(data) {
+    try {
+        const response = await Axios({
+            url: `${baseUrl}/getEspacioFindOneSalones`,
+            method: "POST",
+            data: data
+        });
+    return response;
+    } catch (e) {
+    console.log("error"+e);
+    }
+}
+
 
 
 export async function getEspaciosById(id) {

@@ -16,13 +16,13 @@ const getReservasDeporte = async (req,res)  => {
         month = "0"+month.toString()
     }
     let fechaActual = day.toString()+"-"+month.toString()+"-"+year.toString()
-    const response = await pool.query('SELECT * FROM reservas WHERE id_espacio = $1 AND fecha_fin >= $2',[id_espacio,fechaActual])
+    const response = await pool.query('SELECT * FROM reservas WHERE estado = $3 AND id_espacio = $1 AND fecha_fin >= $2',[id_espacio,fechaActual,"ACEPTADA"])
     res.status(200).json(response.rows);
 }
 
 const getReservaPorFecha = async (req,res)  => {
     const {id_espacio, fecha} = req.body;
-    const response = await pool.query('SELECT to_char(hora_inicio, \'HH24:MI\') as hora_inicio FROM reservas WHERE id_espacio = $1 AND fecha_inicio = $2',[id_espacio, fecha])
+    const response = await pool.query('SELECT to_char(hora_inicio, \'HH24:MI\') as hora_inicio FROM reservas WHERE estado = $3 AND id_espacio = $1 AND fecha_inicio = $2',[id_espacio, fecha,"ACEPTADA"])
     res.status(200).json(response.rows);
 }
 
@@ -72,8 +72,8 @@ const reservarSinIdCliente = async (req,res)  => {
     var horaActual = new Date()
     horaActual.setHours(horaInicio.getHours()+1)
 
-    while (horaInicio.getHours() < horaFin.getHours()) {
-        const response = await pool.query('INSERT INTO reservas (id_usuario,id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin,id_cliente) VALUES ($1, $2, $3, $4, $5, $6, $7)',[id_usuario,id_espacio,fecha,fecha,horaInicio.getHours()+":00:00",horaActual.getHours()+":00:00",id_cliente]);
+    while (horaInicio.getHours() <= horaFin.getHours()) {
+        const response = await pool.query('INSERT INTO reservas (id_usuario,id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin,id_cliente,estado) VALUES ($1, $2, $3, $4, $5, $6, $7,"PENDIENTE")',[id_usuario,id_espacio,fecha,fecha,horaInicio.getHours()+":00:00",horaActual.getHours()+":00:00",id_cliente]);
         horaInicio.setHours(horaInicio.getHours()+1)
         horaActual.setHours(horaActual.getHours()+1)
     }

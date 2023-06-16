@@ -66,7 +66,9 @@ const LoginForm = () => {
         authState: {correo:usuario.correo, 
           nombre: usuario.nombre, 
           apellido: usuario.apellido, 
-          empresa: usuario.id_empresa}
+          empresa: usuario.id_empresa,
+          id: usuario.id
+        }
       });
       navigate("/"); 
     } catch (error) {

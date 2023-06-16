@@ -1,0 +1,153 @@
+.tabla-btn-container {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.btn-agregar-container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.tabla-container {
+    width: 60%;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+}
+
+.tabla th,
+.tabla td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.tabla tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+.tabla thead th {
+    background-color: #242424;
+    color: #fff;
+}
+
+.tabla tbody tr.fila-roja {
+    background-color: #f8afaf;
+}
+.tabla tbody tr.fila-amarilla {
+    background-color: #fff48dfb;
+}
+.tabla tbody tr.fila-verde {
+    background-color: #a4ff7a;
+}
+
+.tabla button.eliminar-btn {
+    background-color: #ff5353;
+    border: none;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 16px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.tabla button.eliminar-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.tabla button.editar-btn {
+    background-color: #ffbb00;
+    border: none;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 16px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.tabla button.editar-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.tabla button.asignar-btn {
+    background-color: #3f83ff;
+    border: none;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 16px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.tabla button.asignar-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.tabla button.desactivar-btn {
+    background-color: #ffd700;
+    border: none;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 16px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.tabla button.desactivar-btn:hover {
+    background-color: #ffcc00;
+}
+
+.tabla button.desactivar-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.btn-container {
+    display: flex;
+    gap: 10px;
+    /* Espacio entre los botones */
+}
+
+.tabla button.agregar-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #333;
+    font-size: 16px;
+    text-align: left;
+    /* Alineación a la izquierda */
+}
