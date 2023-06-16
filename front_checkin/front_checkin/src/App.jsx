@@ -12,6 +12,8 @@ import Administrador from './pages/administrador/Administrador';
 import CrearEspacio from './pages/administrador/CrearEspacio';
 import Reserva from './pages/reservas/Reserva'
 import Login from './pages/auth/Login'
+import Espacios from './pages/administrador/Espacios'
+import ReservasAdmin from './pages/administrador/ReservasAdmin'
 import { RequireAuth } from 'react-auth-kit'
 function App() {
   const [count, setCount] = useState(0)
@@ -30,6 +32,8 @@ function App() {
             <Administrador /></RequireAuth>} ></Route>
           <Route path="/crearespacio" element= {<RequireAuth loginPath='/login'><CrearEspacio /></RequireAuth>} ></Route>
           <Route path="/reserva/:id/:tipo" element= {<Reserva />} ></Route>
+          <Route path="/espacios" element= {<Espacios />} ></Route>
+          <Route path="/crearReserva" elemente ={<ReservasAdmin />}></Route>
       </Routes>
     </div>
     </>

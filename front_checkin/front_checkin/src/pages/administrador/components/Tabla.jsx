@@ -5,8 +5,13 @@ import { BsPencilSquare } from 'react-icons/bs';
 import { AiFillPlusCircle } from 'react-icons/ai';
 import '../styles/Tabla.css'
 
-
 const Tabla = (reservas) => {
+    const aceptarFila = (id) => {
+        console.log("aceptada "  + id)
+    }
+    const eliminarFila = (id) =>{
+        console.log("eliminada " + id)
+    }
     console.log(reservas)
     return (
         <>
@@ -23,6 +28,8 @@ const Tabla = (reservas) => {
                             <th>Fecha</th>
                             <th>Hora inicio</th>
                             <th>Hora fin</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,12 +53,12 @@ const Tabla = (reservas) => {
                                 <td>
                                     {reserva.hora_fin}
                                 </td>
-                                <td className={reserva.estado === "PENDIENTE" ? 'fila-amarilla' : reserva.estado === 'ACEPTADA' ? 'fila-verde' : 'fila-roja'}>
+                                <td className={reserva.estado === "PENDIENTE" ? 'fila-amarilla' : reserva.estado === "ACEPTADA" ? 'fila-verde' : 'fila-roja'}>
                                     {reserva.estado}
                                 </td>
                                 <td>
                                     <div className='btn-container'>
-                                        <button className='editar-btn' title='Editar' onClick={() => editarFila(reserva.id)}>
+                                        <button className='editar-btn' title='Editar' onClick={() => aceptarFila(reserva.id)}>
                                             <BsPencilSquare />
                                         </button>
                                         <button className='eliminar-btn' title='Eliminar' onClick={() => eliminarFila(reserva.id)}>

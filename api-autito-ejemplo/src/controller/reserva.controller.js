@@ -54,7 +54,7 @@ const setReservaDeporte = async (req,res)  => {
 }
 
 const reservarSinIdCliente = async (req,res)  => {
-    const {id_usuario,id_espacio,fecha,hora_inicio,hora_fin,nombre, apellido, dni, correo, contacto} = req.body;
+    const {id_espacio,fecha,hora_inicio,hora_fin,nombre, apellido, dni, correo, contacto} = req.body;
     var response = await pool.query('SELECT count(*) FROM cliente where dni = $1',[dni]);
     if (response.rows[0]['count'] == 0){
         pool.query('INSERT INTO cliente (nombre, apellido, dni, correo, contacto) VALUES ($1, $2, $3, $4, $5)',[nombre, apellido, dni, correo, contacto]);
@@ -73,7 +73,7 @@ const reservarSinIdCliente = async (req,res)  => {
     horaActual.setHours(horaInicio.getHours()+1)
 
     while (horaInicio.getHours() <= horaFin.getHours()) {
-        const response = await pool.query('INSERT INTO reservas (id_usuario,id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin,id_cliente,estado) VALUES ($1, $2, $3, $4, $5, $6, $7,"PENDIENTE")',[id_usuario,id_espacio,fecha,fecha,horaInicio.getHours()+":00:00",horaActual.getHours()+":00:00",id_cliente]);
+        const response = await pool.query('INSERT INTO reservas (id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin,id_cliente,estado) VALUES ($1, $2, $3, $4, $5, $6, $7)',[id_espacio,fecha,fecha,horaInicio.getHours()+":00:00",horaActual.getHours()+":00:00",id_cliente,"PENDIENTE"]);
         horaInicio.setHours(horaInicio.getHours()+1)
         horaActual.setHours(horaActual.getHours()+1)
     }
@@ -81,7 +81,7 @@ const reservarSinIdCliente = async (req,res)  => {
     res.status(200).json({
         message:'Reserva agregada correctamente',
         body:{
-            reserva:{id_usuario,id_espacio,fecha,hora_inicio,hora_fin,id_cliente}
+            reserva:{id_espacio,fecha,hora_inicio,hora_fin,id_cliente}
         }
     });
 }

@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import ButtonBook from "./ButtonBook";
-import { getReservasDeportes} from "../services/reservas/reservas";
+import { getReservasDeportes, saveReservasVisitante} from "../services/reservas/reservas";
 import Calendar from "react-calendar";
-import { addHours, eachHourOfInterval, format, parseISO } from "date-fns";
-import { useAuthUser } from "react-auth-kit";
+import { eachHourOfInterval, format, parseISO } from "date-fns";
 
 const ModalContainer = styled.div`
   position: fixed;
@@ -143,11 +142,6 @@ const Modal = ({ onClose, children, datosReserva }) => {
   const [selectFecha, setSelectFecha] = useState(null);
   const [horario, setHorario] = useState("");
   const [hora, setHora] = useState("");
-  const authUser = useAuthUser();
-  const isAuthenticated = authUser();
-  const { id } = isAuthenticated || {};
-
-
 
 
   function handleHora(fhora) {
@@ -292,13 +286,14 @@ const Modal = ({ onClose, children, datosReserva }) => {
   const onSubmit = async (data, e) => {
 
     const jsonData = {"nombre":data.nombre,"apellido":data.apellido,
-    "correo":data.correo, "contacto":data.contacto, "id_usuario":id,
-    "id_espacio":datosReserva.id, "hora_incio":hora,"hora_fin":hora}
+    "correo":data.correo, "contacto":data.contacto,
+    "id_espacio":datosReserva.id, "hora_incio":hora,"hora_fin":hora,"dni": data.dni}
     // try{
     //   saveReservasVisitante(jsonData)
     // }catch(error){
     //   console.log("erro al guardar reserva deporte-salon: "+error)
     // }
+    saveReservasVisitante(jsonData)
     console.log(jsonData)
     e.preventDefault();
   };
@@ -328,6 +323,8 @@ const Modal = ({ onClose, children, datosReserva }) => {
           <Input type="text" {...register("nombre")} />
           <Label>Apellido:</Label>
           <Input type="text" {...register("apellido")} />
+          <Label>DNI:</Label>
+          <Input type="number" {...register("dni")} />
           <Label>Correo:</Label>
           <Input type="text" {...register("correo")} />
           <Label>Celular:</Label>

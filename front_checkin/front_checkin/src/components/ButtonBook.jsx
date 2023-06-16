@@ -9,8 +9,9 @@ const Button = styled.button`
   border-radius: 4px;
   background-color: #2196f3;
   color: #ffffff;
+  margin :15px;
   cursor: pointer;
-  
+
   &:hover {
     background-color: #0d8bf2;
   }
