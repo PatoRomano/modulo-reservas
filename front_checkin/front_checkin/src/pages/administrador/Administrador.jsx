@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Fondo from "../../assets/deportes.webp";
-import {Tabla} from "../administrador/components/Tabla"
+import Tabla from "../administrador/components/Tabla";
 import { Link } from "react-router-dom";
 import { getEspaciosEmpresas } from "../../services/espacios/espacio";
+import {getReservas} from "../../services/reservas/reservas"
 import { useAuthUser } from "react-auth-kit";
 import { useNavigate } from "react-router-dom";
 //  <Card key={deporte.id} title={deporte.nombre_publico}
@@ -11,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 
 const Administrador = () => {
   const [espacios, setEspacios] = useState([]);
+  const [reservas, setReservas] = useState([]);
+
   const authUser = useAuthUser();
   const isAuthenticated = authUser();
   const { empresa } = isAuthenticated || {};
@@ -19,8 +22,9 @@ const Administrador = () => {
   const showData = async () => {
     const data = { id_empresa: empresa };
     const dataEspacios = await getEspaciosEmpresas(data);
+    const dataReservas = await getReservas(data);
     setEspacios(dataEspacios.data);
-    console.log(espacios);
+    setReservas(dataReservas.data)
   };
   
   useEffect(() => {
@@ -28,12 +32,12 @@ const Administrador = () => {
   }, []);
   return (
     <>
-      <Header title="Administra tus espacios" backgroundImage={Fondo}></Header>
+      <Header title="Administra tus espacios y reservas" backgroundImage={Fondo}></Header>
       <div className="container">
         <Link to="/crearespacio">
           <button>Crear Espacio</button>
         </Link>
-        <Tabla espacios = {espacios}></Tabla>
+        <Tabla reservas = {reservas}></Tabla>
         
 
       </div>

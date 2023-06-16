@@ -23,10 +23,22 @@ export async function saveReservasVisitante(data) {
             method: "POST",
             data: data
         });
+        
     return response;
     } catch (e) {
     console.log("error"+e);
     }
 }
-
+export async function getReservas(data) {
+    try {
+        const response = await Axios({
+            url: `${baseUrl}/reservas`,
+            method: "POST",
+            data: data
+        });
+    return response;
+    } catch (e) {
+    console.log("error"+e);
+    }
+}
 

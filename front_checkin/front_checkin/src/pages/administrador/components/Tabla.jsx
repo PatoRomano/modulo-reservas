@@ -3,11 +3,15 @@ import React, { useState, useEffect } from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
 import { BsPencilSquare } from 'react-icons/bs';
 import { AiFillPlusCircle } from 'react-icons/ai';
-import '../styles/Tabla'
+import '../styles/Tabla.css'
 
 
-const Tabla = (espacios) => {
+const Tabla = (reservas) => {
+    console.log(reservas)
     return (
+        <>
+        {reservas.lenght !== 0 ? (
+            <>
         <div className="tabla-btn-container">
             <div className="tabla-container">
                 <table className="tabla">
@@ -22,35 +26,35 @@ const Tabla = (espacios) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {espacios.map((espacio) => (
-                            <tr key={espacio.id} className={espacio.disponible === 0 ? 'fila-roja' : ''}>
+                        {reservas.reservas.map((reserva) => (
+                            <tr key={reserva.id} className={reserva.disponible === 0 ? 'fila-roja' : ''}>
                                 <td>
-                                    {espacio.nombre}
+                                    {reserva.nombrecliente}
                                 </td>
                                 <td>
-                                    {espacio.apellido}
+                                    {reserva.apellidocliente}
                                 </td>
                                 <td>
-                                    {espacio.espacio}
+                                    {reserva.nombre}
                                 </td>
                                 <td>
-                                    {espacio.fecha}
+                                    {reserva.fecha}
                                 </td>
                                 <td>
-                                    {espacio.hora_inicio}
+                                    {reserva.hora_inicio}
                                 </td>
                                 <td>
-                                    {espacio.hora_fin}
+                                    {reserva.hora_fin}
                                 </td>
-                                <td className={espacio.estado === "PENDIENTE" ? 'fila-amarilla' : espacio.estado === 'ACEPTADA' ? 'fila-verde' : 'fila-roja'}>
-                                    {espacio.estado}
+                                <td className={reserva.estado === "PENDIENTE" ? 'fila-amarilla' : reserva.estado === 'ACEPTADA' ? 'fila-verde' : 'fila-roja'}>
+                                    {reserva.estado}
                                 </td>
                                 <td>
                                     <div className='btn-container'>
-                                        <button className='editar-btn' title='Editar' onClick={() => editarFila(espacio.id)}>
+                                        <button className='editar-btn' title='Editar' onClick={() => editarFila(reserva.id)}>
                                             <BsPencilSquare />
                                         </button>
-                                        <button className='eliminar-btn' title='Eliminar' onClick={() => eliminarFila(espacio.id)}>
+                                        <button className='eliminar-btn' title='Eliminar' onClick={() => eliminarFila(reserva.id)}>
                                             <FaTrashAlt />
                                         </button>
                                     </div>
@@ -61,6 +65,8 @@ const Tabla = (espacios) => {
                 </table>
             </div>
         </div>
+        </>
+    ):null}</>
     );
 };
 
