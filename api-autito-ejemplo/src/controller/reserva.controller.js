@@ -7,6 +7,21 @@ const getReservas = async (req,res)  => {
     res.status(200).json(response.rows);
 }
 
+const updateEstadoReservaDeporte = async (req,res)  => {
+    const {id_reserva,id_usuario,flag} = req.body;
+    if (flag == 0) {
+        const response = await pool.query('UPDATE reservas SET id_usuario=$1, estado=$3 WHERE id=$2',[id_usuario,id_reserva,"RECHAZADA"])    
+    } else {
+        const response = await pool.query('UPDATE reservas SET id_usuario=$1, estado=$3 WHERE id=$2',[id_usuario,id_reserva,"ACEPTADA"]) 
+    }
+    res.status(200).json({
+        message:'Reserva actualizada correctamente',
+        body:{
+            reserva:{id_reserva,id_usuario,flag}
+        }
+    });
+}
+
 const getReservasDeporte = async (req,res)  => {
     const {id_espacio} = req.body;
     let date = new Date()
@@ -108,4 +123,4 @@ const reservarSinIdCliente = async (req,res)  => {
     });
 }
 
-module.exports = {getReservasDeporte,setReservaDeporte,getReservas,getReservaPorFecha,reservarSinIdCliente}
+module.exports = {getReservasDeporte,setReservaDeporte,getReservas,getReservaPorFecha,reservarSinIdCliente,updateEstadoReservaDeporte}
