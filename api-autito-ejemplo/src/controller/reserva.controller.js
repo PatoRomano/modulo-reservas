@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const Axios = require('axios')
 
 const getReservas = async (req,res)  => {
     const {id_empresa} = req.body;
@@ -61,7 +62,7 @@ const reservarSinIdCliente = async (req,res)  => {
     } 
     response = await pool.query('SELECT * FROM cliente where dni = $1',[dni]);
     id_cliente = response.rows[0]['id']
-    
+
     var horaInicio = new Date()
     var horaFin = new Date()
     var horario = parseInt(hora_inicio.substring(0,2))
@@ -78,10 +79,31 @@ const reservarSinIdCliente = async (req,res)  => {
         horaActual.setHours(horaActual.getHours()+1)
     }
 
+    // SACARLE EL VAR!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    var espacio = await pool.query('SELECT nombre FROM espacios where id = $1',[id_espacio]);
+
+    var llamadoWpp = await Axios({
+        url: `http://localhost:3001/lead`,
+        method: "POST",
+        data: {"message":
+        "RESERVA SOLICITADA:"+
+        "\n\nEspacio = "+espacio.rows[0]['nombre']+
+        "\nFecha = "+fecha+
+        "\nHora_inicio = "+hora_inicio+
+        "\nHora_fin = "+hora_fin+
+        "\nNombre = "+nombre+
+        "\nApellido = "+apellido+
+        "\nDni = "+dni+
+        "\nCorreo = "+correo+
+        "\nContacto = "+contacto,
+        "phone":contacto}
+    })
+
     res.status(200).json({
         message:'Reserva agregada correctamente',
         body:{
-            reserva:{id_espacio,fecha,hora_inicio,hora_fin,id_cliente}
+            //reserva:{id_espacio,fecha,hora_inicio,hora_fin,id_cliente}
+            reserva:{id_espacio,fecha,hora_inicio,hora_fin,nombre, apellido, dni, correo, contacto}
         }
     });
 }
