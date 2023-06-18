@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import ButtonBook from "./ButtonBook";
-import { getReservasDeportes, saveReservasVisitante} from "../services/reservas/reservas";
+import {
+  getReservasDeportes,
+  saveReservasVisitante,
+} from "../services/reservas/reservas";
 import Calendar from "react-calendar";
 import { eachHourOfInterval, format, parseISO } from "date-fns";
-import { useNavigate  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ModalContainer = styled.div`
   position: fixed;
@@ -22,26 +25,12 @@ const ModalContainer = styled.div`
 const ModalContent = styled.div`
   position: relative;
   display: grid;
-  grid-template-columns: 2fr 1fr 0.2fr 1fr; /* Dos columnas de igual tamaño */
+  grid-template-columns: 2fr 0.2fr 1fr; /* Dos columnas de igual tamaño */
   gap: 20px; /* Espacio entre las columnas */
   background-color: #fff;
   padding: 20px;
 `;
 
-const CardDisponible = styled.button`
-  display: flex;
-  flex-direction: column;
-  background-color: gray;
-  cursor: pointer;
-  margin: 5px;
-`;
-const CardNoDisponible = styled.button`
-  display: flex;
-  flex-direction: column;
-  background-color: red;
-  pointer-events: none;
-  margin: 5px;
-`;
 
 const CloseButton = styled.button`
   position: absolute;
@@ -63,6 +52,7 @@ const NoDisponibleTile = styled(TileContentContainer)`
   background-color: red;
   color: white;
   pointer-events: none;
+
 `;
 const Label = styled.label`
   display: block;
@@ -138,112 +128,37 @@ const CalendarContainer = styled.div`
     height: 40px; /* Ajusta la altura según tus necesidades */
   }
 `;
-const Modal = ({ onClose, children, datosReserva }) => {
+const Select = styled.select`
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 16px;
+`;
+
+const ModalSalon = ({ onClose, children, datosReserva }) => {
   const { register, handleSubmit } = useForm();
   const [reservas, setReservas] = useState([]);
   const [selectFecha, setSelectFecha] = useState(null);
-  const [horario, setHorario] = useState("");
-  const [hora, setHora] = useState("");
+  const [mañana, setMañana] = useState("");
+  const [noche, setNoche] = useState("");
+  const [fechasReservadasNoche, setFechasNoches] = useState([])
+  const [fechasReservadasMañana, setFechasMañana] = useState([])
   const navigate = useNavigate();
 
-
-
-  function handleHora(fhora) {
-    if (hora == fhora) {
-      setHora("");
-    } else {
-      setHora(fhora);
+  function verTurnoDisponible (reserva) {
+    let fecha ="";
+    if(reserva.hora_fin == "17:00:00"){
+        fecha=format(parseISO(reserva.fecha_inicio), "yyyy-MM-dd")
+        fechasReservadasMañana.push(fecha)
+    }else{
+        fecha=format(parseISO(reserva.fecha_inicio), "yyyy-MM-dd")
+        fechasReservadasNoche.push(fecha);
     }
-  }
-
-  const cargarHorario = () => {
-    const hora_inicio_string = datosReserva.hora_inicio;
-    const [horasInicio, minutosInicio, segundosInicio] =
-      hora_inicio_string.split(":");
-    const fechaInicio = new Date();
-    fechaInicio.setHours(horasInicio, minutosInicio, segundosInicio);
-
-    const hora_fin_string = datosReserva.hora_fin;
-    const [horasFin, minutosFin, segundosFin] = hora_fin_string.split(":");
-    const fechaFin = new Date();
-    fechaFin.setHours(horasFin, minutosFin, segundosFin);
-
-    const diferencia = fechaFin.getTime() - fechaInicio.getTime();
-    const horarioS = Math.trunc(diferencia / 3600 / 1000);
-    setHorario(horarioS);
   };
-
-  const verHorariosDisponibles = () => {
-    const reservasHorarios = [];
-    reservas.filter((reserva) => {
-      const fechaReserva = reserva.fecha_inicio.split("T")[0];
-      if (selectFecha == fechaReserva) {
-        reservasHorarios.push(reserva.hora_inicio);
-      }
-    });
-
-    const [horasInicio, minutosInicio, segundosInicio] =
-      datosReserva.hora_inicio.split(":");
-    const [horasFin, minutosFin, segundosFin] =
-      datosReserva.hora_fin.split(":");
-
-    const fechaInicio = new Date();
-    fechaInicio.setHours(horasInicio, minutosInicio, segundosInicio);
-
-    const fechaFin = new Date();
-    fechaFin.setHours(horasFin, minutosFin, segundosFin);
-
-    const fechaInicioModificada = new Date(fechaInicio);
-    fechaInicioModificada.setHours(fechaInicio.getHours() + 1);
-
-    const fechaFinModificada = new Date(fechaFin);
-    fechaFinModificada.setHours(fechaFin.getHours() + 1);
-
-    const horas = eachHourOfInterval({
-      start: fechaInicioModificada,
-      end: fechaFinModificada,
-    });
-
-    const horariosDisponibles = horas.map((hora) => {
-      hora.setHours(hora.getHours() - 1);
-      const fhora =
-        hora.getHours() +
-        ":" +
-        hora.getMinutes() +
-        hora.getMinutes() +
-        ":" +
-        hora.getSeconds() +
-        hora.getSeconds();
-      if (reservasHorarios.includes(fhora)) {
-        return (
-          <>
-            <CardNoDisponible key={fhora}>{fhora}</CardNoDisponible>
-          </>
-        );
-      } else {
-        return (
-          <>
-            <CardDisponible
-              value={fhora}
-              type=""
-              key={fhora}
-              onDoubleClick={() => {
-                handleHora(fhora);
-              }}
-            >
-              {fhora}
-            </CardDisponible>
-          </>
-        );
-      }
-    });
-    return <div>{horariosDisponibles}</div>;
-  };
-
   const verFechaDisponible = ({ date, view }) => {
     const fechaCountMap = new Map();
     // Iterar sobre el array de reservas y contar las repeticiones de cada fecha
-    reservas.forEach((reserva) => {
+      reservas.forEach((reserva) => {
+     
       const fechaString = reserva.fecha_fin;
       const fechaSinFormatear = parseISO(fechaString);
       const fecha = format(fechaSinFormatear, "yyyy-MM-dd");
@@ -256,7 +171,8 @@ const Modal = ({ onClose, children, datosReserva }) => {
     const content = {};
     // Crear el contenido de los tiled basado en el conteo de repeticiones de cada fecha
     fechaCountMap.forEach((count, fecha) => {
-      if (count >= horario) {
+
+      if (count >= 2) {
         content[fecha] = <NoDisponibleTile></NoDisponibleTile>;
       }
     });
@@ -267,6 +183,9 @@ const Modal = ({ onClose, children, datosReserva }) => {
   const showData = async () => {
     const data = { id_espacio: datosReserva.id };
     const dataReservas = await getReservasDeportes(data);
+    dataReservas.data.map((reserva)=>{
+        verTurnoDisponible(reserva)
+    });
     setReservas(dataReservas.data);
   };
 
@@ -274,34 +193,51 @@ const Modal = ({ onClose, children, datosReserva }) => {
     showData();
   }, []);
 
-  useEffect(() => {
-    cargarHorario();
-  }, []);
-
   const handleDateChange = (date) => {
     const formattedDate = format(date, "yyyy-MM-dd");
+    console.log(fechasReservadasNoche)
+    setNoche("")
+    setMañana("")
+    if(fechasReservadasNoche.includes(formattedDate)){
+        setNoche("No mostrar");
+    }
+    if(fechasReservadasMañana.includes(formattedDate)){
+        setMañana("No mostrar");
+    }
     const isTilePintado = verFechaDisponible({ date, view: "month" });
     if (!isTilePintado) {
       setSelectFecha(formattedDate);
-      verHorariosDisponibles();
     }
   };
 
   const onSubmit = async (data, e) => {
-
-    const jsonData = {"nombre":data.nombre,"apellido":data.apellido,
-    "correo":data.correo, "contacto":data.contacto,
-    "id_espacio":datosReserva.id, "hora_inicio":hora,"hora_fin":hora,"dni": data.dni,"fecha":selectFecha}
-    // try{
-    //   saveReservasVisitante(jsonData)
-    // }catch(error){
-    //   console.log("erro al guardar reserva deporte-salon: "+error)
-    // }
-    saveReservasVisitante(jsonData)
-    console.log(jsonData)
-    const message = 'Reserva solicitada';
-    navigate(`/?mensaje=${encodeURIComponent(message)}`); 
-    e.preventDefault();
+    let hora_inicio = "";
+    let hora_fin = "";
+    if(data.turno == "mañana"){
+        hora_inicio = "09:00:00";
+        hora_fin = "17:00:00";
+    }
+    else if(data.turno == "noche"){
+        hora_inicio = "19:00:00";
+        hora_fin = "02:00:00";
+    }else{
+        return null;
+    }
+    const jsonData = {
+      nombre: data.nombre,
+      apellido: data.apellido,
+      correo: data.correo,
+      contacto: data.contacto,
+      id_espacio: datosReserva.id,
+      hora_inicio: hora_inicio,
+      hora_fin: hora_fin,
+      dni: data.dni,
+      fecha: selectFecha,
+    };
+        saveReservasVisitante(jsonData);
+        const message = "Reserva solicitada";
+        navigate(`/?mensaje=${encodeURIComponent(message)}`);
+        e.preventDefault();
   };
 
   return (
@@ -314,15 +250,12 @@ const Modal = ({ onClose, children, datosReserva }) => {
               tileContent={verFechaDisponible}
               value={selectFecha ? parseISO(selectFecha) : null}
               onChange={handleDateChange}
+              minDate={new Date()}
             />
           </CalendarContainer>
         </div>
         <div>
           <Label htmlFor="">{selectFecha}</Label>
-          {selectFecha ? verHorariosDisponibles() : null}
-        </div>
-        <div>
-              <Label>{hora}</Label>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Label>Nombre:</Label>
@@ -335,6 +268,11 @@ const Modal = ({ onClose, children, datosReserva }) => {
           <Input type="text" {...register("correo")} />
           <Label>Celular:</Label>
           <Input type="text" {...register("contacto")} />
+          <Select {...register("turno")}>
+            <option>Seleccione una opción</option>
+            {mañana == "" ? (<option value="mañana" >Mañana</option>): null}
+            {noche == "" ? ( <option value="noche">Noche</option>): null}          
+          </Select>
           <ButtonBook type="submit" onButtonClick={handleSubmit(onSubmit)}>
             Solicitar
           </ButtonBook>
@@ -346,4 +284,4 @@ const Modal = ({ onClose, children, datosReserva }) => {
   );
 };
 
-export default Modal;
+export default ModalSalon;

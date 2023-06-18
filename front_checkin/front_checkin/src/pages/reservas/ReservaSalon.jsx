@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from "react";
 import CardEspacio from "../../components/CardEspacio";
-import Modal from "../../components/Modal";
+import ModalSalon from "../../components/ModalSalon";
 import { useParams } from "react-router-dom";
+import styled from "styled-components";
+import {getEspaciosEmpresaSalones } from "../../services/espacios/espacio";
 
-import { getEspaciosEmpresaDeportes} from "../../services/espacios/espacio";
 
-const Reserva = () => {
+
+const Select = styled.select`
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 16px;
+`;
+
+
+
+const ReservaSalon = () => {
   const { id, tipo} = useParams();
   const [showModal, setShowModal] = useState(false);
   const [espacios, setEspacios] = useState([]);
@@ -14,8 +24,10 @@ const Reserva = () => {
   
   const showData = async () => {
     const data = { id_empresa: id };
-      const dataEspacios = await getEspaciosEmpresaDeportes(data);
+      console.log("entre");
+      const dataEspacios = await getEspaciosEmpresaSalones(data);
       setEspacios(dataEspacios.data);
+      console.log(dataEspacios)
   };
   useEffect(() => {
     showData();
@@ -37,7 +49,7 @@ const Reserva = () => {
   return (
     <>
       <div className="container">
-        <h1>Reservas</h1>
+        <h1>Salones</h1>
         {espacios.map((elemento) => (
           <>
             <div className="">
@@ -53,10 +65,10 @@ const Reserva = () => {
         ))}
 
         {showModal && (
-          <Modal onClose={closeModal} datosReserva={dataEspacio}></Modal>
+          <ModalSalon onClose={closeModal} datosReserva={dataEspacio}></ModalSalon>
         )}
       </div>
     </>
   );
 };
-export default Reserva;
+export default ReservaSalon;

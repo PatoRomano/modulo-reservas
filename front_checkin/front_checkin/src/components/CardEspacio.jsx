@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../styled-components/card.css'; // Importa el archivo CSS de estilos
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -18,6 +18,7 @@ const Button = styled.button`
   }
 `;
 const CardEspacio = ({ imageSrc, title, precio, id, tipo, accion}) => {
+    console.log(tipo)
     return (
         <div className="card">
             <img src={imageSrc} alt="Image" className="card-image" />
@@ -29,14 +30,26 @@ const CardEspacio = ({ imageSrc, title, precio, id, tipo, accion}) => {
                 <h3>{precio}</h3>
             </div>) : null}
             <div>
-            { accion ? (
+            { accion == 1? (
             <Link to={`/editarEspacio/${id}`}> <Button>Seleccionar</Button></Link>
-                ) : (<Link to={`/reserva/${id}/${tipo}`}> <Button>Seleccionar</Button></Link>)}
+                ) : null
+            }
+            { tipo == 1 ? (
+            <Link to={`/reserva/${id}`}> <Button>Seleccionar</Button></Link>
+                ) : null
+            }
+            { tipo == 3 ? (
+            <Link to={`/reservaSalon/${id}`}> <Button>Seleccionar</Button></Link>
+                ) : null
+            }
+            { tipo == 2 ? (
+            <Link to={`/reservaDepartamento/${id}`}> <Button>Seleccionar</Button></Link>
+                ) : null
+            }
             </div>
            
         </div>
     );
 };
-
 
 export default CardEspacio;

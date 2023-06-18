@@ -15,6 +15,8 @@ import Login from './pages/auth/Login'
 import Espacios from './pages/administrador/Espacios'
 import ReservasAdmin from './pages/administrador/ReservasAdmin'
 import { RequireAuth } from 'react-auth-kit'
+import ReservaSalon from './pages/reservas/ReservaSalon'
+import ReservaDepartamento from './pages/reservas/ReservaDepartamento'
 function App() {
   const [count, setCount] = useState(0)
 
@@ -31,7 +33,9 @@ function App() {
           <Route path="/administrador" element= {<RequireAuth loginPath='/login'>
             <Administrador /></RequireAuth>} ></Route>
           <Route path="/crearespacio" element= {<RequireAuth loginPath='/login'><CrearEspacio /></RequireAuth>} ></Route>
-          <Route path="/reserva/:id/:tipo" element= {<Reserva />} ></Route>
+          <Route path="/reserva/:id" element= {<Reserva />} ></Route>
+          <Route path="/reservaSalon/:id" element= {<ReservaSalon />} ></Route>
+          <Route path="/reservaDepartamento/:id" element= {<ReservaDepartamento />} ></Route>
           <Route path="/espacios" element= {<Espacios />} ></Route>
           <Route path="/crearReserva" elemente ={<ReservasAdmin />}></Route>
       </Routes>

@@ -166,14 +166,8 @@ const CrearEspacio = () => {
           )}
           {selectedOption === "departamento" && (
             <>
-              <Label>Nombre:</Label>
+              <Label>Dirección:</Label>
               <Input type="text" {...register("nombre")} />
-              <Label>Servicios:</Label>
-              <Input type="text" {...register("servicio_departamento")} />
-              <Label>Numero de camas:</Label>
-              <Input type="number" {...register("camas")} />
-              <Label>Capacidad:</Label>
-              <Input type="number" {...register("capacidad")} />
               <Label>Precio:</Label>
               <Input type="number" {...register("precio_hora")} />
               <Input type="number" value="2" {...register("id_tipo")} hidden/>

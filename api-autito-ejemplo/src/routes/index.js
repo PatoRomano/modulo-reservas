@@ -3,7 +3,7 @@ const router = Router();
 const { getUsers, findOne, setUser} = require('../controller/usuario.controller');
 const { getTiposDeportes, getTiposDepartamentos, getTiposSalones, getTipos, setTipo} = require('../controller/tipoespacio.controller');
 const { getEmpresas,setEmpresa, getEmpresasDeportes, getEmpresasSalones,getEmpresasDepartamentos} = require('../controller/empresaController');
-const { getEspacios,setEspacio, getEspacioDeportes,getEspacioSalones, getEspacioFindOne,getEspacioFindOneSalones, getEspaciosPorEmpresa} = require('../controller/espacio.controller');
+const { getEspacios,setEspacio, getEspacioDeportes,getEspacioSalones, getEspacioFindOne,getEspacioFindOneSalones,getEspacioFindOneDepartamentos, getEspaciosPorEmpresa} = require('../controller/espacio.controller');
 const { getReservasDeporte,setReservaDeporte,getReservas,getReservaPorFecha,reservarSinIdCliente,updateEstadoReservaDeporte} = require('../controller/reserva.controller');
 const { getServicios,setServicio,getServiciosPorTipo} = require('../controller/servicio.controller');
 const { getEspacioServicios,setEspacioServicio,espacioServicios,servicioEspacios} = require('../controller/espacioservicio.controller');
@@ -55,7 +55,7 @@ router.post('/servicioEspacios', servicioEspacios); //A partir del id de un serv
 
 router.post('/getEspacioFindOne', getEspacioFindOne);
 router.post('/getEspacioFindOneSalones', getEspacioFindOneSalones); //A partir del id de la empresa devuelve el espacio
-
+router.post('/getEspacioFindOneDepartamentos', getEspacioFindOneDepartamentos);
 router.post('/getClientePorId', getClientePorId);
 router.post('/getClientePorDni', getClientePorDni);
 router.post('/setCliente', setCliente);
