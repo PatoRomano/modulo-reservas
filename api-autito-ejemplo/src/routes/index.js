@@ -8,6 +8,7 @@ const { getReservasDeporte,setReservaDeporte,getReservas,getReservaPorFecha,rese
 const { getServicios,setServicio,getServiciosPorTipo} = require('../controller/servicio.controller');
 const { getEspacioServicios,setEspacioServicio,espacioServicios,servicioEspacios} = require('../controller/espacioservicio.controller');
 const { getClientes,getClientePorId,getClientePorDni,setCliente} = require('../controller/cliente.controller');
+const { getArbitros} = require('../controller/arbitros.controller');
 
 //Getters
 router.get('/empresas', getEmpresas);
@@ -17,6 +18,7 @@ router.post('/reservas', getReservas);
 router.get('/servicios', getServicios);
 router.get('/espacioservicio', getEspacioServicios);
 router.get('/clientes', getClientes);
+router.get('/getArbitros', getArbitros);
 
 //routes get usuarios
 router.get('/usuarios', getUsers);

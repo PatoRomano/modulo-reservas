@@ -5,6 +5,12 @@ const getEspacios = async (req,res)  => {
     res.status(200).json(response.rows);
 }
 
+const getEspacioIdEspacio = async (req,res)  => {
+    const {id_espacio} = req.body;
+    const response = await pool.query('SELECT * as tipo FROM espacios id  = $1',[id_espacio]);
+    res.status(200).json(response.rows);
+}
+
 const getEspacioFindOne = async (req,res)  => {
     const {id_empresa} = req.body;
     const response = await pool.query('SELECT es.id, es.nombre as nombreespacio, es.precio_hora, '
