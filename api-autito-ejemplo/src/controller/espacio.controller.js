@@ -77,4 +77,4 @@ const getEspaciosPorEmpresa = async (req, res) => {
     const response = await pool.query('SELECT * FROM espacios WHERE id_empresa = $1',[id_empresa]);
     res.status(200).json(response.rows);    
 }
-module.exports = {getEspacios,setEspacio, getEspacioDeportes,getEspacioSalones, getEspacioFindOne, getEspaciosPorEmpresa, getEspacioFindOneSalones, getEspacioFindOneDepartamentos};
+module.exports = {getEspacios,setEspacio, getEspacioDeportes,getEspacioSalones, getEspacioFindOne, getEspaciosPorEmpresa, getEspacioFindOneSalones, getEspacioFindOneDepartamentos, getEspacioIdEspacio};
