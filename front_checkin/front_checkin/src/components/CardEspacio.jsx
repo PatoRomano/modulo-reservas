@@ -31,7 +31,7 @@ const CardEspacio = ({ imageSrc, title, precio, id, tipo, accion}) => {
             </div>) : null}
             <div>
             { accion == 1? (
-            <Link to={`/editarEspacio/${id}`}> <Button>Seleccionar</Button></Link>
+            <Link to={`/editarEspacio/${id}`}> <Button>Editar</Button></Link>
                 ) : null
             }
             { tipo == 1 ? (
@@ -46,6 +46,7 @@ const CardEspacio = ({ imageSrc, title, precio, id, tipo, accion}) => {
             <Link to={`/reservaDepartamento/${id}`}> <Button>Seleccionar</Button></Link>
                 ) : null
             }
+            
             </div>
            
         </div>

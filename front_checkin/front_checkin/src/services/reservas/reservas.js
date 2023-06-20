@@ -29,6 +29,7 @@ export async function saveReservasVisitante(data) {
     console.log("error"+e);
     }
 }
+
 export async function getReservas(data) {
     try {
         const response = await Axios({
@@ -41,4 +42,19 @@ export async function getReservas(data) {
     console.log("error"+e);
     }
 }
+
+
+export async function updateReserva(data) {
+    try {
+        const response = await Axios({
+            url: `${baseUrl}/updateEstadoReservaDeporte`,
+            method: "POST",
+            data: data
+        });
+    return response;
+    } catch (e) {
+    console.log("error"+e);
+    }
+}
+
 

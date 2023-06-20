@@ -2,11 +2,12 @@ import Axios from "axios";
 
 const baseUrl = "http://localhost:3000";
 
-export async function getEspacios() {
+export async function getEspaciosPorEmpresa(data) {
     try {
         const response = await Axios({
-            url: `${baseUrl}/espacios`,
-            method: "GET",
+            url: `${baseUrl}/espaciosEmpresa`,
+            method: "POST",
+            data: data
         });
     return response;
     } catch (e) {
@@ -55,11 +56,12 @@ export async function getEspaciosEmpresaDepartamentos(data) {
 
 
 
-export async function getEspaciosById(id) {
+export async function getEspaciosById(data) {
     try {
         const response = await Axios({
-            url: `${baseUrl}/espacio/${id}`,
-            method: "GET",
+            url: `${baseUrl}/getEspacioIdEspacio/`,
+            method: "POST",
+            data:data
         });
     return response;
     } catch (e) {

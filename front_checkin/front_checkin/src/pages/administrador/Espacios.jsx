@@ -64,7 +64,7 @@ const Espacios = () => {
           {espacios.map((elemento) => (
             <>
               <CardContainer>
-                <CardEspacio imageSrc="vasxmas.jpg" title={elemento.nombre} accion = {1} />
+                <CardEspacio imageSrc="vasxmas.jpg" title={elemento.nombre} accion = {1} id ={elemento.id} />
               </CardContainer>
             </>
           ))}

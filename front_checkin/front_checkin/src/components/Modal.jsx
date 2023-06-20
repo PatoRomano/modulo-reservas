@@ -292,12 +292,12 @@ const Modal = ({ onClose, children, datosReserva }) => {
     const jsonData = {"nombre":data.nombre,"apellido":data.apellido,
     "correo":data.correo, "contacto":data.contacto,
     "id_espacio":datosReserva.id, "hora_inicio":hora,"hora_fin":hora,"dni": data.dni,"fecha":selectFecha}
-    // try{
-    //   saveReservasVisitante(jsonData)
-    // }catch(error){
-    //   console.log("erro al guardar reserva deporte-salon: "+error)
-    // }
-    saveReservasVisitante(jsonData)
+    try{
+      saveReservasVisitante(jsonData)
+    }catch{
+      console.log("error: "+error)
+      return;
+    }
     console.log(jsonData)
     const message = 'Reserva solicitada';
     navigate(`/?mensaje=${encodeURIComponent(message)}`); 

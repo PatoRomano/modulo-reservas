@@ -27,6 +27,7 @@ const Button = styled.button`
   }
 `;
 
+
 const Administrador = () => {
   const [espacios, setEspacios] = useState([]);
   const [reservas, setReservas] = useState([]);
