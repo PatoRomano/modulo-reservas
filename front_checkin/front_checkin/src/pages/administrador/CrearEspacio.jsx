@@ -188,6 +188,14 @@ const CrearEspacio = () => {
             step="1800"
             onChange={handleEndTimeChange}
           />
+           <Label>Descripcion:</Label>
+           <p>En esta sección van los servicios o dirección o cualquier cosa que sea de utilidad para el usuario</p>
+          <textarea
+            type="text"
+            cols="50"
+            rows="10"
+            {...register("descripcion")}
+          />
           {error && <ErrorMsg>{error}</ErrorMsg>}
           <ButtonBook type="submit" onButtonClick={handleSubmit(onSubmit)}>
             Guardar

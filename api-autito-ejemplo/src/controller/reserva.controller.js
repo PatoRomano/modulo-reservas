@@ -75,7 +75,7 @@ const setReservaDeporte = async (req,res)  => {
 }
 
 const reservarSinIdCliente = async (req,res)  => {
-    const {id_espacio,fecha,hora_inicio,hora_fin,nombre, apellido, dni, correo, contacto} = req.body;
+    const {id_espacio,fecha,hora_inicio,hora_fin,nombre, apellido, dni, correo, contacto, descripcion} = req.body;
     var response = await pool.query('SELECT count(*) FROM cliente where dni = $1',[dni]);
     if (response.rows[0]['count'] == 0){
         pool.query('INSERT INTO cliente (nombre, apellido, dni, correo, contacto) VALUES ($1, $2, $3, $4, $5)',[nombre, apellido, dni, correo, contacto]);
@@ -84,7 +84,7 @@ const reservarSinIdCliente = async (req,res)  => {
     id_cliente = response.rows[0]['id']
 
     let espacio = await pool.query('SELECT * FROM espacios where id = $1',[id_espacio]);
-    let empresa = await pool.query('SELECT telefono FROM empresa where id = ' +espacio.rows[0]['id_empresa']);
+    //let empresa = await pool.query('SELECT telefono FROM empresa where id = ' +espacio.rows[0]['id_empresa']);
     let horaInicio = new Date()
     let horaFin = new Date()
     let horario = parseInt(hora_inicio.substring(0,2))
@@ -95,31 +95,31 @@ const reservarSinIdCliente = async (req,res)  => {
     let horaActual = new Date()
     horaActual.setHours(horaInicio.getHours()+1)
     if(espacio.rows[0]['id_tipo'] == 3 || espacio.rows[0]['id_tipo'] == 2){
-        const response = await pool.query('INSERT INTO reservas (id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin,id_cliente,estado) VALUES ($1, $2, $3, $4, $5, $6, $7)',[id_espacio,fecha,fecha,hora_inicio,hora_fin,id_cliente,"PENDIENTE"]);
+        const response = await pool.query('INSERT INTO reservas (id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin,id_cliente,estado, descripcion) VALUES ($1, $2, $3, $4, $5, $6, $7,$8)',[id_espacio,fecha,fecha,hora_inicio,hora_fin,id_cliente,"PENDIENTE",descripcion]);
     }else{
         while (horaInicio.getHours() <= horaFin.getHours()) {
-            const response = await pool.query('INSERT INTO reservas (id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin,id_cliente,estado) VALUES ($1, $2, $3, $4, $5, $6, $7)',[id_espacio,fecha,fecha,horaInicio.getHours()+":00:00",horaActual.getHours()+":00:00",id_cliente,"PENDIENTE"]);
+            const response = await pool.query('INSERT INTO reservas (id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin,id_cliente,estado, descripcion) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',[id_espacio,fecha,fecha,horaInicio.getHours()+":00:00",horaActual.getHours()+":00:00",id_cliente,"PENDIENTE",descripcion]);
             horaInicio.setHours(horaInicio.getHours()+1)
             horaActual.setHours(horaActual.getHours()+1)
         }
     }
     
-     llamadoWpp = await Axios({
-         url: `http://localhost:3001/lead`,
-         method: "POST",
-         data: {"message":
-         "RESERVA SOLICITADA:"+
-         "\n\nEspacio = "+espacio.rows[0]['nombre']+
-         "\nFecha = "+fecha+
-         "\nHora_inicio = "+hora_inicio+
-         "\nHora_fin = "+hora_fin+
-         "\nNombre = "+nombre+
-         "\nApellido = "+apellido+
-         "\nDni = "+dni+
-         "\nCorreo = "+correo+
-         "\nContacto = "+contacto,
-         "phone":empresa.rows[0]['telefono']}
-     })
+    //  llamadoWpp = await Axios({
+    //      url: `http://localhost:3001/lead`,
+    //      method: "POST",
+    //      data: {"message":
+    //      "RESERVA SOLICITADA:"+
+    //      "\n\nEspacio = "+espacio.rows[0]['nombre']+
+    //      "\nFecha = "+fecha+
+    //      "\nHora_inicio = "+hora_inicio+
+    //      "\nHora_fin = "+hora_fin+
+    //      "\nNombre = "+nombre+
+    //      "\nApellido = "+apellido+
+    //      "\nDni = "+dni+
+    //      "\nCorreo = "+correo+
+    //      "\nContacto = "+contacto,
+    //      "phone":empresa.rows[0]['telefono']}
+    //  })
 
      res.status(200).json({
         message:'Reserva agregada correctamente',

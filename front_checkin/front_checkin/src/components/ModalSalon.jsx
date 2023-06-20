@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import ButtonBook from "./ButtonBook";
+import ButtonCancel from "./ButtonCancel";
+import Modal from "react-modal";
 import {
   getReservasDeportes,
   saveReservasVisitante,
@@ -31,7 +33,6 @@ const ModalContent = styled.div`
   padding: 20px;
 `;
 
-
 const CloseButton = styled.button`
   position: absolute;
   top: 10px;
@@ -52,7 +53,6 @@ const NoDisponibleTile = styled(TileContentContainer)`
   background-color: red;
   color: white;
   pointer-events: none;
-
 `;
 const Label = styled.label`
   display: block;
@@ -134,31 +134,121 @@ const Select = styled.select`
   margin-bottom: 16px;
 `;
 
+const ModalContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+`;
+
+const AdvertisementLeft = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-image: url("publicidad-1.png");
+  background-position: center center;
+  background-size: cover;
+  background-repeat: repeat;
+`;
+
+const AdvertisementRight = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-image: url("publicidad-1.png");
+  background-position: center center;
+  background-repeat: repeat;
+  background-size: cover;
+`;
+
+const Container = styled.div`
+  margin-bottom: 16px;
+`;
+
 const ModalSalon = ({ onClose, children, datosReserva }) => {
   const { register, handleSubmit } = useForm();
   const [reservas, setReservas] = useState([]);
   const [selectFecha, setSelectFecha] = useState(null);
   const [mañana, setMañana] = useState("");
   const [noche, setNoche] = useState("");
-  const [fechasReservadasNoche, setFechasNoches] = useState([])
-  const [fechasReservadasMañana, setFechasMañana] = useState([])
+  const [fechasReservadasNoche, setFechasNoches] = useState([]);
+  const [fechasReservadasMañana, setFechasMañana] = useState([]);
   const navigate = useNavigate();
+  const [jsonData, setJsonData] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  function verTurnoDisponible (reserva) {
-    let fecha ="";
-    if(reserva.hora_fin == "17:00:00"){
-        fecha=format(parseISO(reserva.fecha_inicio), "yyyy-MM-dd")
-        fechasReservadasMañana.push(fecha)
-    }else{
-        fecha=format(parseISO(reserva.fecha_inicio), "yyyy-MM-dd")
-        fechasReservadasNoche.push(fecha);
-    }
+  const ConfirmationModal = ({ isOpen, onCloseModal, onConfirm }) => {
+    return (
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={onCloseModal}
+        contentLabel="Confirmación"
+      >
+        <ModalContentWrapper>
+          <Container></Container>
+          <AdvertisementLeft>
+            -----------------------------------------------------------
+          </AdvertisementLeft>
+          <AdvertisementRight>
+            -----------------------------------------------------------
+          </AdvertisementRight>
+
+          <p>¿Pedir Reserva?</p>
+          <ButtonBook onButtonClick={onConfirm}>Solicitar</ButtonBook>
+          <ButtonCancel onButtonClick={onCloseModal}>Cancelar</ButtonCancel>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+        </ModalContentWrapper>
+      </Modal>
+    );
   };
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleConfirm = async () => {
+    console.log(jsonData);
+    try {
+      saveReservasVisitante(jsonData);
+      console.log(jsonData);
+    } catch {
+      console.log("error: " + error);
+      return;
+    }
+
+    const message = "Reserva solicitada";
+    navigate(`/?mensaje=${encodeURIComponent(message)}`);
+  };
+
+  function verTurnoDisponible(reserva) {
+    let fecha = "";
+    if (reserva.hora_fin == "17:00:00") {
+      fecha = format(parseISO(reserva.fecha_inicio), "yyyy-MM-dd");
+      fechasReservadasMañana.push(fecha);
+    } else {
+      fecha = format(parseISO(reserva.fecha_inicio), "yyyy-MM-dd");
+      fechasReservadasNoche.push(fecha);
+    }
+  }
   const verFechaDisponible = ({ date, view }) => {
     const fechaCountMap = new Map();
     // Iterar sobre el array de reservas y contar las repeticiones de cada fecha
-      reservas.forEach((reserva) => {
-     
+    reservas.forEach((reserva) => {
       const fechaString = reserva.fecha_fin;
       const fechaSinFormatear = parseISO(fechaString);
       const fecha = format(fechaSinFormatear, "yyyy-MM-dd");
@@ -171,7 +261,6 @@ const ModalSalon = ({ onClose, children, datosReserva }) => {
     const content = {};
     // Crear el contenido de los tiled basado en el conteo de repeticiones de cada fecha
     fechaCountMap.forEach((count, fecha) => {
-
       if (count >= 2) {
         content[fecha] = <NoDisponibleTile></NoDisponibleTile>;
       }
@@ -183,8 +272,8 @@ const ModalSalon = ({ onClose, children, datosReserva }) => {
   const showData = async () => {
     const data = { id_espacio: datosReserva.id };
     const dataReservas = await getReservasDeportes(data);
-    dataReservas.data.map((reserva)=>{
-        verTurnoDisponible(reserva)
+    dataReservas.data.map((reserva) => {
+      verTurnoDisponible(reserva);
     });
     setReservas(dataReservas.data);
   };
@@ -195,14 +284,14 @@ const ModalSalon = ({ onClose, children, datosReserva }) => {
 
   const handleDateChange = (date) => {
     const formattedDate = format(date, "yyyy-MM-dd");
-    console.log(fechasReservadasNoche)
-    setNoche("")
-    setMañana("")
-    if(fechasReservadasNoche.includes(formattedDate)){
-        setNoche("No mostrar");
+    console.log(fechasReservadasNoche);
+    setNoche("");
+    setMañana("");
+    if (fechasReservadasNoche.includes(formattedDate)) {
+      setNoche("No mostrar");
     }
-    if(fechasReservadasMañana.includes(formattedDate)){
-        setMañana("No mostrar");
+    if (fechasReservadasMañana.includes(formattedDate)) {
+      setMañana("No mostrar");
     }
     const isTilePintado = verFechaDisponible({ date, view: "month" });
     if (!isTilePintado) {
@@ -213,31 +302,38 @@ const ModalSalon = ({ onClose, children, datosReserva }) => {
   const onSubmit = async (data, e) => {
     let hora_inicio = "";
     let hora_fin = "";
-    if(data.turno == "mañana"){
-        hora_inicio = "09:00:00";
-        hora_fin = "17:00:00";
+    if (data.turno == "mañana") {
+      hora_inicio = "09:00:00";
+      hora_fin = "17:00:00";
+    } else if (data.turno == "noche") {
+      hora_inicio = "19:00:00";
+      hora_fin = "02:00:00";
+    } else {
+      return null;
     }
-    else if(data.turno == "noche"){
-        hora_inicio = "19:00:00";
-        hora_fin = "02:00:00";
-    }else{
-        return null;
+    if (
+      data.nombre != "" &&
+      data.apellido != "" &&
+      data.correo != "" &&
+      data.contacto != "" &&
+      selectFecha != "" &&
+      data.dni != ""
+    ) {
+      const jsonData = {
+        nombre: data.nombre,
+        apellido: data.apellido,
+        correo: data.correo,
+        contacto: data.contacto,
+        id_espacio: datosReserva.id,
+        hora_inicio: hora_inicio,
+        hora_fin: hora_fin,
+        dni: data.dni,
+        fecha: selectFecha,
+      };
+      setJsonData(jsonData);
+      handleOpenModal();
+      e.preventDefault();
     }
-    const jsonData = {
-      nombre: data.nombre,
-      apellido: data.apellido,
-      correo: data.correo,
-      contacto: data.contacto,
-      id_espacio: datosReserva.id,
-      hora_inicio: hora_inicio,
-      hora_fin: hora_fin,
-      dni: data.dni,
-      fecha: selectFecha,
-    };
-        saveReservasVisitante(jsonData);
-        const message = "Reserva solicitada";
-        navigate(`/?mensaje=${encodeURIComponent(message)}`);
-        e.preventDefault();
   };
 
   return (
@@ -270,14 +366,18 @@ const ModalSalon = ({ onClose, children, datosReserva }) => {
           <Input type="text" {...register("contacto")} />
           <Select {...register("turno")}>
             <option>Seleccione una opción</option>
-            {mañana == "" ? (<option value="mañana" >Mañana</option>): null}
-            {noche == "" ? ( <option value="noche">Noche</option>): null}          
+            {mañana == "" ? <option value="mañana">Mañana</option> : null}
+            {noche == "" ? <option value="noche">Noche</option> : null}
           </Select>
           <ButtonBook type="submit" onButtonClick={handleSubmit(onSubmit)}>
             Solicitar
           </ButtonBook>
         </form>
-
+        <ConfirmationModal
+          isOpen={isModalOpen}
+          onCloseModal={handleCloseModal}
+          onConfirm={handleConfirm}
+        />
         {children}
       </ModalContent>
     </ModalContainer>

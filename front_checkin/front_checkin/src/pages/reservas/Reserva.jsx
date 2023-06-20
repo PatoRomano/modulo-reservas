@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CardEspacio from "../../components/CardEspacio";
-import Modal from "../../components/Modal";
+import ModalDeporte from "../../components/ModalDeporte";
 import { useParams } from "react-router-dom";
 
 import { getEspaciosEmpresaDeportes} from "../../services/espacios/espacio";
@@ -53,7 +53,7 @@ const Reserva = () => {
         ))}
 
         {showModal && (
-          <Modal onClose={closeModal} datosReserva={dataEspacio}></Modal>
+          <ModalDeporte onClose={closeModal} datosReserva={dataEspacio}></ModalDeporte>
         )}
       </div>
     </>

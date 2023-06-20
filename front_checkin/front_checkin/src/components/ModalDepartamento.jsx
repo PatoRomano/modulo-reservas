@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import ButtonBook from "./ButtonBook";
+import ButtonCancel from "./ButtonCancel";
+import Modal from "react-modal";
 import {
   getReservasDeportes,
   saveReservasVisitante,
@@ -128,17 +130,100 @@ const CalendarContainer = styled.div`
     height: 40px; /* Ajusta la altura según tus necesidades */
   }
 `;
-const Select = styled.select`
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 16px;
+
+const ModalContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
 `;
 
+const AdvertisementLeft = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-image: url("publicidad-1.png");
+  background-position: center center;
+  background-size: cover;
+  background-repeat: repeat;
+`;
+
+const AdvertisementRight = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-image: url("publicidad-1.png");
+  background-position: center center;
+  background-repeat: repeat;
+  background-size: cover;
+`;
+
+const Container = styled.div`
+  margin-bottom: 16px;
+`;
 const ModalDepartamento = ({ onClose, children, datosReserva }) => {
   const { register, handleSubmit } = useForm();
   const [reservas, setReservas] = useState([]);
   const [selectFecha, setSelectFecha] = useState(null);
   const navigate = useNavigate();
+  const [jsonData, setJsonData] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+  const ConfirmationModal = ({ isOpen, onCloseModal, onConfirm }) => {
+    return (
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={onCloseModal}
+        contentLabel="Confirmación"
+      >
+        <ModalContentWrapper>
+          <Container>
+          </Container>
+          <AdvertisementLeft>-----------------------------------------------------------</AdvertisementLeft>
+          <AdvertisementRight>-----------------------------------------------------------</AdvertisementRight>
+
+          <p>¿Pedir Reserva?</p>
+          <ButtonBook onButtonClick={onConfirm}>Solicitar</ButtonBook>
+          <ButtonCancel onButtonClick={onCloseModal}>Cancelar</ButtonCancel>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+        </ModalContentWrapper>
+      </Modal>
+    );
+  };
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleConfirm = async () => {
+    console.log(jsonData);
+    try {
+      saveReservasVisitante(jsonData);
+      console.log(jsonData);
+    } catch {
+      console.log("error: " + error);
+      return;
+    }
+   
+    const message = "Reserva solicitada";
+    navigate(`/?mensaje=${encodeURIComponent(message)}`);
+  };
 
   const verFechaDisponible = ({ date, view }) => {
     const fechaCountMap = new Map();
@@ -185,21 +270,32 @@ const ModalDepartamento = ({ onClose, children, datosReserva }) => {
   };
 
   const onSubmit = async (data, e) => {
-    const jsonData = {
-      nombre: data.nombre,
-      apellido: data.apellido,
-      correo: data.correo,
-      contacto: data.contacto,
-      id_espacio: datosReserva.id,
-      hora_inicio: "00:00:00",
-      hora_fin: "23:00:00",
-      dni: data.dni,
-      fecha: selectFecha,
-    };
-        saveReservasVisitante(jsonData);
-        const message = "Reserva solicitada";
-        navigate(`/?mensaje=${encodeURIComponent(message)}`);
-        e.preventDefault();
+    console.log(data)
+    console.log(selectFecha)
+    if (
+      data.nombre != "" &&
+      data.apellido != "" &&
+      data.correo != "" &&
+      data.contacto != "" &&
+      selectFecha != "" &&
+      data.dni != ""
+    ){
+      const jsonData = {
+        nombre: data.nombre,
+        apellido: data.apellido,
+        correo: data.correo,
+        contacto: data.contacto,
+        id_espacio: datosReserva.id,
+        hora_inicio: "00:00:00",
+        hora_fin: "23:00:00",
+        dni: data.dni,
+        fecha: selectFecha,
+      };
+      setJsonData(jsonData);
+      handleOpenModal();
+      e.preventDefault();
+    }
+   
   };
 
   return (
@@ -234,7 +330,11 @@ const ModalDepartamento = ({ onClose, children, datosReserva }) => {
             Solicitar
           </ButtonBook>
         </form>
-
+        <ConfirmationModal
+          isOpen={isModalOpen}
+          onCloseModal={handleCloseModal}
+          onConfirm={handleConfirm}
+        />
         {children}
       </ModalContent>
     </ModalContainer>

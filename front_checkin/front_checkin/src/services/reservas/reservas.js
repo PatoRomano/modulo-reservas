@@ -15,6 +15,7 @@ export async function getReservasDeportes(data) {
     console.log("error"+e);
     }
 }
+
 export async function saveReservasVisitante(data) {
     try {
         console.log(data);
@@ -42,7 +43,18 @@ export async function getReservas(data) {
     console.log("error"+e);
     }
 }
-
+export async function getArbitros() {
+    try {
+        const response = await Axios({
+            url: `${baseUrl}/getArbitros`,
+            method: "GET",
+        });
+        
+    return response;
+    } catch (e) {
+    console.log("error"+e);
+    }
+}
 
 export async function updateReserva(data) {
     try {
