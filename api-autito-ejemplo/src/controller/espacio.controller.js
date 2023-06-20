@@ -5,18 +5,29 @@ const getEspacios = async (req,res)  => {
     res.status(200).json(response.rows);
 }
 
+const updateEspacio = async (req,res)  => {
+    const {id_espacio,nombre,hora_inicio,hora_fin,descripcion,precio_hora,id_estado} = req.body;
+    const response = await pool.query('UPDATE espacios SET nombre=$2, hora_inicio=$3, hora_fin=$4, descripcion=$5, precio_hora=$6, id_estado=$7 WHERE id=$1',[id_espacio,nombre,hora_inicio,hora_fin,descripcion,precio_hora,id_estado])    
+    res.status(200).json({
+        message:'Espacio actualizado correctamente',
+        body:{
+            reserva:{id_espacio,nombre,hora_inicio,hora_fin,descripcion,precio_hora,id_estado}
+        }
+    });
+}
+
 const getEspacioIdEspacio = async (req,res)  => {
     const {id_espacio} = req.body;
-    const response = await pool.query('SELECT * as tipo FROM espacios id  = $1',[id_espacio]);
+    const response = await pool.query('SELECT * FROM espacios WHERE id = $1',[id_espacio]);
     res.status(200).json(response.rows);
 }
 
 const getEspacioFindOne = async (req,res)  => {
     const {id_empresa} = req.body;
     const response = await pool.query('SELECT es.id, es.nombre as nombreespacio, es.precio_hora, '
-    +'es.hora_inicio, es.hora_fin, es.descripcion te.nombre as tipo FROM espacios es '
+    +'es.hora_inicio, es.hora_fin, es.descripcion, te.nombre as tipo FROM espacios es '
     +'INNER JOIN tipo_espacio as te ON te.id = es.id_tipo '
-    +'where te.id_padre = 1 and id_empresa  = $1',[id_empresa]);
+    +'where te.id_padre = 1 and es.id_estado = 1 and id_empresa  = $1',[id_empresa]);
     res.status(200).json(response.rows);
 }
 
@@ -25,7 +36,7 @@ const getEspacioFindOneSalones = async (req,res)  => {
     const response = await pool.query('SELECT es.id, es.nombre as nombreespacio, es.precio_hora, '
     +'es.hora_inicio, es.hora_fin, es.descripcion, te.nombre as tipo FROM espacios es '
     +'INNER JOIN tipo_espacio as te ON te.id = es.id_tipo '
-    +'where te.id_padre = 3 and id_empresa  = $1',[id_empresa]);
+    +'where te.id_padre = 3 and es.id_estado = 1 and id_empresa  = $1',[id_empresa]);
     res.status(200).json(response.rows);
 }
 
@@ -34,7 +45,7 @@ const getEspacioFindOneDepartamentos = async (req,res)  => {
     const response = await pool.query('SELECT es.id, es.nombre as nombreespacio, es.precio_hora, '
     +'es.hora_inicio, es.hora_fin, es.descripcion, te.nombre as tipo FROM espacios es '
     +'INNER JOIN tipo_espacio as te ON te.id = es.id_tipo '
-    +'where te.id_padre = 2 and id_empresa  = $1',[id_empresa]);
+    +'where te.id_padre = 2 and es.id_estado = 1 and id_empresa  = $1',[id_empresa]);
     res.status(200).json(response.rows);
 }
 
@@ -77,4 +88,4 @@ const getEspaciosPorEmpresa = async (req, res) => {
     const response = await pool.query('SELECT * FROM espacios WHERE id_empresa = $1',[id_empresa]);
     res.status(200).json(response.rows);    
 }
-module.exports = {getEspacios,setEspacio, getEspacioDeportes,getEspacioSalones, getEspacioFindOne, getEspaciosPorEmpresa, getEspacioFindOneSalones, getEspacioFindOneDepartamentos, getEspacioIdEspacio};
+module.exports = {getEspacios,setEspacio, getEspacioDeportes,getEspacioSalones, getEspacioFindOne, getEspaciosPorEmpresa, getEspacioFindOneSalones, getEspacioFindOneDepartamentos, getEspacioIdEspacio, updateEspacio};

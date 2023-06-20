@@ -1,12 +1,16 @@
 const Axios = require('axios')
 
 const getArbitros = async (req,res)  => {
-    const response = await Axios({
-        url: `http://localhost:3002/arbitros/`,
-        method: "GET",
-        data: {}
-    })
-    res.status(200).json(response);
+    try {
+        const response = await Axios.get('http://localhost:3002/api/arbitros/');
+        const arbitros = response.data; // Datos de la API externa
+        
+        // Devolver los datos obtenidos al invocador
+        res.json(arbitros);
+      } catch (error) {
+        console.error('Error al consumir la API externa:', error);
+        res.status(500).json({ error: 'Error al obtener los arbitros' });
+      }
 }
 
 module.exports = {getArbitros}

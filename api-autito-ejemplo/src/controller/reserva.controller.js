@@ -3,7 +3,12 @@ const Axios = require('axios')
 
 const getReservas = async (req,res)  => {
     const {id_empresa} = req.body;
-    const response = await pool.query('SELECT r.id, es.nombre, r.fecha_fin as fecha, r.hora_inicio, r.hora_fin, r.estado, c.nombre as nombrecliente, c.apellido as apellidocliente, c.dni as dnicliente FROM reservas r JOIN espacios es ON es.id = r.id_espacio JOIN empresa em ON em.id = es.id_empresa JOIN cliente c ON c.id = r.id_cliente WHERE em.id = $1',[id_empresa])
+    let date = new Date()
+    let day = date.getDate()
+    let month = date.getMonth()
+    let year = date.getFullYear()
+    let fechaActual = day.toString()+"-"+month.toString()+"-"+year.toString()
+    const response = await pool.query('SELECT r.id, es.nombre, r.fecha_fin as fecha, r.hora_inicio, r.hora_fin, r.estado, r.descripcion, c.nombre as nombrecliente, c.apellido as apellidocliente, c.dni as dnicliente FROM reservas r JOIN espacios es ON es.id = r.id_espacio JOIN empresa em ON em.id = es.id_empresa JOIN cliente c ON c.id = r.id_cliente WHERE em.id = $1 and r.fecha_fin >= $2 order by fecha desc',[id_empresa,fechaActual])
     res.status(200).json(response.rows);
 }
 
@@ -53,7 +58,7 @@ const setReservaDeporte = async (req,res)  => {
 
     let horaActual = new Date()
     horaActual.setHours(horaInicio.getHours()+1)
-
+    
     while (horaInicio.getHours() < horaFin.getHours()) {
         const response = await pool.query('INSERT INTO reservas (id_usuario,id_espacio,fecha_fin,fecha_inicio,hora_inicio,hora_fin,id_cliente) VALUES ($1, $2, $3, $4, $5, $6, $7)',[id_usuario,id_espacio,fecha,fecha,horaInicio.getHours()+":00:00",horaActual.getHours()+":00:00",id_cliente]);
         horaInicio.setHours(horaInicio.getHours()+1)
