@@ -9,7 +9,7 @@ import {
   saveReservasVisitante,
 } from "../services/reservas/reservas";
 import Calendar from "react-calendar";
-import { eachHourOfInterval, format, parseISO } from "date-fns";
+import { eachHourOfInterval, format, parseISO, addDays } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
 const ModalContainer = styled.div`
@@ -27,12 +27,11 @@ const ModalContainer = styled.div`
 const ModalContent = styled.div`
   position: relative;
   display: grid;
-  grid-template-columns: 2fr 0.2fr 1fr; /* Dos columnas de igual tamaño */
+  grid-template-columns: 2fr  1fr; /* Dos columnas de igual tamaño */
   gap: 20px; /* Espacio entre las columnas */
   background-color: #fff;
   padding: 20px;
 `;
-
 
 const CloseButton = styled.button`
   position: absolute;
@@ -54,7 +53,6 @@ const NoDisponibleTile = styled(TileContentContainer)`
   background-color: red;
   color: white;
   pointer-events: none;
-
 `;
 const Label = styled.label`
   display: block;
@@ -65,6 +63,14 @@ const Input = styled.input`
   width: 100%;
   padding: 8px;
   margin-bottom: 16px;
+`;
+const H5 = styled.h5`
+  font-size: 10px;
+`;
+const ContLabel = styled.div`
+  background-color: #6747c1;
+  border-radius: 25px;
+  color: white !important;
 `;
 const CalendarContainer = styled.div`
   .react-calendar {
@@ -126,8 +132,11 @@ const CalendarContainer = styled.div`
   .react-calendar__tile {
     padding: 0;
     margin: 0;
-    width: 10px; /* Ajusta el ancho según tus necesidades */
-    height: 40px; /* Ajusta la altura según tus necesidades */
+    width: 20px; /* Ajusta el ancho según tus necesidades */
+    height: 60px; /* Ajusta la altura según tus necesidades */
+  }
+  .react-calendar__tile:disabled {
+    background-color: #cbffdd;
   }
 `;
 
@@ -173,7 +182,6 @@ const ModalDepartamento = ({ onClose, children, datosReserva }) => {
   const [jsonData, setJsonData] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-
   const ConfirmationModal = ({ isOpen, onCloseModal, onConfirm }) => {
     return (
       <Modal
@@ -182,10 +190,13 @@ const ModalDepartamento = ({ onClose, children, datosReserva }) => {
         contentLabel="Confirmación"
       >
         <ModalContentWrapper>
-          <Container>
-          </Container>
-          <AdvertisementLeft>-----------------------------------------------------------</AdvertisementLeft>
-          <AdvertisementRight>-----------------------------------------------------------</AdvertisementRight>
+          <Container></Container>
+          <AdvertisementLeft>
+            -----------------------------------------------------------
+          </AdvertisementLeft>
+          <AdvertisementRight>
+            -----------------------------------------------------------
+          </AdvertisementRight>
 
           <p>¿Pedir Reserva?</p>
           <ButtonBook onButtonClick={onConfirm}>Solicitar</ButtonBook>
@@ -220,7 +231,7 @@ const ModalDepartamento = ({ onClose, children, datosReserva }) => {
       console.log("error: " + error);
       return;
     }
-   
+
     const message = "Reserva solicitada";
     navigate(`/?mensaje=${encodeURIComponent(message)}`);
   };
@@ -228,8 +239,7 @@ const ModalDepartamento = ({ onClose, children, datosReserva }) => {
   const verFechaDisponible = ({ date, view }) => {
     const fechaCountMap = new Map();
     // Iterar sobre el array de reservas y contar las repeticiones de cada fecha
-      reservas.forEach((reserva) => {
-     
+    reservas.forEach((reserva) => {
       const fechaString = reserva.fecha_fin;
       const fechaSinFormatear = parseISO(fechaString);
       const fecha = format(fechaSinFormatear, "yyyy-MM-dd");
@@ -242,7 +252,6 @@ const ModalDepartamento = ({ onClose, children, datosReserva }) => {
     const content = {};
     // Crear el contenido de los tiled basado en el conteo de repeticiones de cada fecha
     fechaCountMap.forEach((count, fecha) => {
-
       if (count >= 1) {
         content[fecha] = <NoDisponibleTile></NoDisponibleTile>;
       }
@@ -270,8 +279,8 @@ const ModalDepartamento = ({ onClose, children, datosReserva }) => {
   };
 
   const onSubmit = async (data, e) => {
-    console.log(data)
-    console.log(selectFecha)
+    console.log(data);
+    console.log(selectFecha);
     if (
       data.nombre != "" &&
       data.apellido != "" &&
@@ -279,7 +288,7 @@ const ModalDepartamento = ({ onClose, children, datosReserva }) => {
       data.contacto != "" &&
       selectFecha != "" &&
       data.dni != ""
-    ){
+    ) {
       const jsonData = {
         nombre: data.nombre,
         apellido: data.apellido,
@@ -295,7 +304,6 @@ const ModalDepartamento = ({ onClose, children, datosReserva }) => {
       handleOpenModal();
       e.preventDefault();
     }
-   
   };
 
   return (
@@ -311,11 +319,16 @@ const ModalDepartamento = ({ onClose, children, datosReserva }) => {
               minDate={new Date()}
             />
           </CalendarContainer>
+          <H5> Seleccione la fecha y complete sus datos :</H5>
+          <H5>Seleccione la fecha que desee. Si la fecha aparece en rojo, </H5>
+          <H5>significa que no está disponible. Una vez seleccionada la fecha, complete </H5>
+          <H5> con sus datos (todos los campos son obligatorios) para proceeder con la solictud. </H5>
         </div>
-        <div>
-          <Label htmlFor="">{selectFecha}</Label>
-        </div>
+
         <form onSubmit={handleSubmit(onSubmit)}>
+          <ContLabel>
+            <Label htmlFor="">{selectFecha}</Label>
+          </ContLabel>
           <Label>Nombre:</Label>
           <Input type="text" {...register("nombre")} />
           <Label>Apellido:</Label>

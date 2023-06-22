@@ -22,20 +22,36 @@ const DatePickerStyled = styled(DatePicker)`
   margin-bottom: 16px;
   margin-right: 15px;
 `;
-const Tabla = (reservas) => {
+const Tabla = ({reservas, actualizarReservas}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDateRange, setSelectedDateRange] = useState([null, null]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [updatedReservas, setUpdatedReservas] = useState([]);
+  const [itemsPerPage] = useState(10);
   const authUser = useAuthUser();
   const isAuthenticated = authUser();
   const { id } = isAuthenticated || {};
 
-
-
-  const cambiarEstado = async (idR,estado) => {
-    let data = {id_reserva:idR,flag:estado,id_usuario:id}
+  const cambiarEstado = async (idR, estado) => {
+    let data = { id_reserva: idR, flag: estado, id_usuario: id };
     updateReserva(data);
-  }
-  const filteredReservas = reservas.reservas.filter((reserva) => {
+    const updatedReservas = reservas.map((reserva) => {
+      if (reserva.id === idR) {
+        return {
+          ...reserva,
+          estado: estado === 1 ? "ACEPTADA" : "RECHAZADA",
+        };
+      }
+      return reserva;
+    });
+    actualizarReservas(updatedReservas);
+  };
+
+  useEffect(() => {
+    setUpdatedReservas(reservas);
+  }, [reservas]);
+
+  const filteredReservas = reservas.filter((reserva) => {
     // Filtrar por término de búsqueda
     if (
       reserva.nombrecliente.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -63,9 +79,9 @@ const Tabla = (reservas) => {
   });
 
   const sortedReservas = filteredReservas.sort((a, b) => {
-    const dateA = new Date(a.fecha);
-    const dateB = new Date(b.fecha);
-    return dateA - dateB;
+    const dateA = parseISO(a.fecha);
+    const dateB = parseISO(b.fecha);
+    return dateB - dateA;
   });
 
   const aceptarFila = (id) => {
@@ -78,7 +94,18 @@ const Tabla = (reservas) => {
   const handleDateChange = (date) => {
     setSelectedDateRange(date);
   };
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentReservas = sortedReservas.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const totalPages = Math.ceil(sortedReservas.length / itemsPerPage);
   return (
     <>
       {reservas.lenght !== 0 ? (
@@ -114,7 +141,7 @@ const Tabla = (reservas) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {sortedReservas.map((reserva) => (
+                  {currentReservas.map((reserva) => (
                     <tr
                       key={reserva.id}
                       className={reserva.disponible === 0 ? "fila-roja" : ""}
@@ -131,6 +158,8 @@ const Tabla = (reservas) => {
                             ? "fila-amarilla"
                             : reserva.estado === "ACEPTADA"
                             ? "fila-verde"
+                            : reserva.estado === "FINALIZADA"
+                            ? "fila-azul"
                             : "fila-roja"
                         }
                       >
@@ -141,14 +170,14 @@ const Tabla = (reservas) => {
                           <button
                             className="editar-btn"
                             title="Editar"
-                            onClick={() => cambiarEstado(reserva.id,1)}
+                            onClick={() => cambiarEstado(reserva.id, 1)}
                           >
                             <BsPencilSquare />
                           </button>
                           <button
                             className="eliminar-btn"
                             title="Eliminar"
-                            onClick={() => cambiarEstado(reserva.id,0)}
+                            onClick={() => cambiarEstado(reserva.id, 0)}
                           >
                             <FaTrashAlt />
                           </button>
@@ -158,6 +187,31 @@ const Tabla = (reservas) => {
                   ))}
                 </tbody>
               </table>
+              <div className="pagination">
+                <button
+                  onClick={() => paginate(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  &#8592;
+                </button>{" "}
+                {/* Flecha izquierda */}
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <button
+                    key={index}
+                    className={currentPage === index + 1 ? "active" : ""}
+                    onClick={() => paginate(index + 1)}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+                <button
+                  onClick={() => paginate(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  &#8594;
+                </button>{" "}
+                {/* Flecha derecha */}
+              </div>
             </div>
           </div>
         </>

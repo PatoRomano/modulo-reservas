@@ -85,7 +85,7 @@ const ReservasAdmin = () => {
     "id_espacio":selectedOption.value, "hora_inicio":data.hora,"hora_fin":data.hora,"dni": data.dni,"fecha":data.fecha_fin};
     try{
       saveReservasVisitante(jsonData)
-    }catch{
+    }catch(error){
       console.log("error: "+error)
       return;
     }

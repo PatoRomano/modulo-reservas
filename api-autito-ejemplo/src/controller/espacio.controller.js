@@ -30,7 +30,7 @@ const getEspacioIdEspacio = async (req,res)  => {
 
 const getCanchas = async (req,res)  => {
     const {id_espacio} = req.body;
-    const response = await pool.query('select te.nombre,te.id from espacios e inner join tipo_espacio te on te.id = e.id_tipo where te.id_padre = 1 and id_empresa = $1',[id_espacio]);
+    const response = await pool.query('select distinct te.nombre,te.id from espacios e inner join tipo_espacio te on te.id = e.id_tipo where te.id_padre = 1 and id_empresa = $1',[id_espacio]);
     res.status(200).json(response.rows);
 }
 

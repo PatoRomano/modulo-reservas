@@ -8,7 +8,7 @@ import {
   getArbitros,
 } from "../services/reservas/reservas";
 import Calendar from "react-calendar";
-import { eachHourOfInterval, format, parseISO } from "date-fns";
+import { eachHourOfInterval, format, parseISO, addDays  } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 import Select from "react-select";
@@ -29,7 +29,7 @@ const ModalContainer = styled.div`
 const ModalContent = styled.div`
   position: relative;
   display: grid;
-  grid-template-columns: 2fr 1fr 0.2fr 1fr; /* Dos columnas de igual tamaño */
+  grid-template-columns: 2fr 1fr 1fr; /* Dos columnas de igual tamaño */
   gap: 20px; /* Espacio entre las columnas */
   background-color: #fff;
   padding: 20px;
@@ -41,6 +41,12 @@ const CardDisponible = styled.button`
   background-color: gray;
   cursor: pointer;
   margin: 5px;
+  border-radius: 15px;
+  height: 30px;
+  width: 140px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 `;
 const CardNoDisponible = styled.button`
   display: flex;
@@ -48,6 +54,12 @@ const CardNoDisponible = styled.button`
   background-color: red;
   pointer-events: none;
   margin: 5px;
+  border-radius: 15px;
+  height: 30px;
+  width: 140px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 `;
 
 const CloseButton = styled.button`
@@ -71,9 +83,20 @@ const NoDisponibleTile = styled(TileContentContainer)`
   color: white;
   pointer-events: none;
 `;
+const DisponibleTile = styled(TileContentContainer)`
+  background-color: #41e175;
+  color: white;
+  pointer-events: none;
+`;
+const ContLabel = styled.div`
+  background-color: #6747c1;
+  border-radius: 25px;
+  color:white !important;
+`;
 const Label = styled.label`
   display: block;
   margin-bottom: 8px;
+  margin-top: 8px;
 `;
 
 const Input = styled.input`
@@ -88,7 +111,9 @@ const CalendarContainer = styled.div`
     font-size: 14px;
     color: #202124;
   }
-
+  .react-calendar__tile:disabled {
+    background-color: #cbffdd;
+  }
   .react-calendar__tile {
     padding: 0;
     margin: 0;
@@ -96,7 +121,7 @@ const CalendarContainer = styled.div`
   }
 
   .react-calendar__month-view__days__day--weekend {
-    color: #d50000;
+    color: #b91c1c;
   }
 
   .react-calendar__month-view__days__day--neighboringMonth {
@@ -141,8 +166,8 @@ const CalendarContainer = styled.div`
   .react-calendar__tile {
     padding: 0;
     margin: 0;
-    width: 10px; /* Ajusta el ancho según tus necesidades */
-    height: 40px; /* Ajusta la altura según tus necesidades */
+    width: 20px; /* Ajusta el ancho según tus necesidades */
+    height: 60px; /* Ajusta la altura según tus necesidades */
   }
 `;
 const Container = styled.div`
@@ -158,6 +183,7 @@ const RadioButton = styled.input`
 `;
 
 const ModalContentWrapper = styled.div`
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -187,6 +213,9 @@ const AdvertisementRight = styled.div`
   background-repeat: repeat;
   background-size: cover;
 `;
+const H5 = styled.h5`
+  font-size: 10px;
+`
 
 const ModalDeporte = ({ onClose, children, datosReserva }) => {
   const { register, handleSubmit } = useForm();
@@ -269,8 +298,12 @@ const ModalDeporte = ({ onClose, children, datosReserva }) => {
             </div>
           )}
 
-          <AdvertisementLeft>-----------------------------------------------------------</AdvertisementLeft>
-          <AdvertisementRight>-----------------------------------------------------------</AdvertisementRight>
+          <AdvertisementLeft>
+            -----------------------------------------------------------
+          </AdvertisementLeft>
+          <AdvertisementRight>
+            -----------------------------------------------------------
+          </AdvertisementRight>
 
           <p>¿Pedir Reserva?</p>
           <ButtonBook onButtonClick={onConfirm}>Solicitar</ButtonBook>
@@ -299,9 +332,9 @@ const ModalDeporte = ({ onClose, children, datosReserva }) => {
   };
 
   const handleConfirm = async () => {
-    if(isArbitroSelected){
+    if (isArbitroSelected) {
       jsonData.descripcion = "Arbitro: " + selectedOption.value;
-    }else{
+    } else {
       jsonData.descripcion = "Arbitro: No solicito";
     }
     try {
@@ -314,7 +347,7 @@ const ModalDeporte = ({ onClose, children, datosReserva }) => {
     const message = "Reserva solicitada";
     navigate(`/?mensaje=${encodeURIComponent(message)}`);
   };
-  //FIN MANEJO
+  //FIN MANEJO ARBITROS
 
   function handleHora(fhora) {
     if (hora == fhora) {
@@ -395,7 +428,7 @@ const ModalDeporte = ({ onClose, children, datosReserva }) => {
               value={fhora}
               type=""
               key={fhora}
-              onDoubleClick={() => {
+              onClick={() => {
                 handleHora(fhora);
               }}
             >
@@ -406,6 +439,11 @@ const ModalDeporte = ({ onClose, children, datosReserva }) => {
       }
     });
     return <div>{horariosDisponibles}</div>;
+  };
+
+  const isDateDisabled = (date) => {
+    const today = new Date();
+    return date < today;
   };
 
   const verFechaDisponible = ({ date, view }) => {
@@ -444,6 +482,7 @@ const ModalDeporte = ({ onClose, children, datosReserva }) => {
 
   useEffect(() => {
     cargarHorario();
+    isDateDisabled();
   }, []);
 
   const handleDateChange = (date) => {
@@ -489,21 +528,39 @@ const ModalDeporte = ({ onClose, children, datosReserva }) => {
         <div>
           <CalendarContainer>
             <Calendar
+              tileDisabled={isDateDisabled}
               tileContent={verFechaDisponible}
               value={selectFecha ? parseISO(selectFecha) : null}
               onChange={handleDateChange}
               minDate={new Date()}
+              maxDate={addDays(new Date(),30)}
             />
           </CalendarContainer>
+          <H5> Seleccione la fecha y hora de su reserva</H5>
+          <H5>
+            Seleccione la fecha que desee. Si la fecha aparece en rojo,
+            significa que no está disponible. Una vez seleccionada la fecha, se
+            mostrarán los horarios disponibles. Para seleccionar un horario,
+            haga clic en la hora deseada.
+          </H5>
+          <H5>Complete su solicitud de reserva</H5>
+          <H5>
+            Por último, para concretar la solicitud de reserva, complete los
+            campos requeridos con sus datos y haga clic en "Solicitar".
+          </H5>
         </div>
         <div>
-          <Label htmlFor="">{selectFecha}</Label>
+          <ContLabel>
+            <h3>Fecha de reserva</h3>
+            <Label htmlFor="">{selectFecha}</Label>
+          </ContLabel>
           {selectFecha ? verHorariosDisponibles() : null}
         </div>
-        <div>
-          <Label>{hora}</Label>
-        </div>
+
         <form onSubmit={handleSubmit(onSubmit)}>
+          <ContLabel>
+            <Label>{hora} HS</Label>
+          </ContLabel>
           <Label>Nombre:</Label>
           <Input type="text" {...register("nombre")} />
           <Label>Apellido:</Label>

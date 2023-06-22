@@ -1,6 +1,7 @@
 import Axios from "axios";
 
-const baseUrl = "http://localhost:3000";
+import baseUrl from "../server";
+
 
 export async function getReservasDeportes(data) {
     try {

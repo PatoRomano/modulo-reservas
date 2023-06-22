@@ -5,7 +5,7 @@ import ButtonBook from "../../components/ButtonBook";
 import { getTiposDeportes, getTipos } from "../../services/tipos/tipos";
 import { saveEspacio } from "../../services/espacios/espacio";
 import { useAuthUser } from "react-auth-kit";
-
+import { useNavigate } from "react-router-dom";
 const Container = styled.div`
   margin-left: 30%;
   margin-right: 30%;
@@ -56,12 +56,12 @@ const CrearEspacio = () => {
   const [endTime, setEndTime] = useState("");
   const [error, setError] = useState("");
   const [deportes, setDeportes] = useState([]);
+  const navigate = useNavigate();
   //-----obtengo los datos del usuario logeado
   const authUser = useAuthUser();
   const isAuthenticated = authUser();
   const { empresa } = isAuthenticated || {};
   //-------
-
 
   //---------obtengo los tipo deporte--------
   const showData = async () => {
@@ -107,25 +107,18 @@ const CrearEspacio = () => {
     } else if (startTime >= endTime) {
       setError("El horario asignado no es válido");
     } else {
-      data['id_empresa'] = empresa;
+      data["id_empresa"] = empresa;
       console.log(data);
       saveEspacio(data);
+      navigate("/espacios");
     }
-  }
-
+  };
 
   return (
     <Container>
       <FormContainer>
         <h2>Registrar espacio</h2>
         <form onSubmit={handleSubmit}>
-          <Label>Imagen:</Label>
-          <Input
-            type="file"
-            {...register("image")}
-            onChange={handleImageChange}
-          />
-          {imagePreview && <ImagePreview src={imagePreview} alt="Preview" />}
           <Label>Espacio:</Label>
           <Select value={selectedOption} onChange={handleOptionChange}>
             <option value="">Seleccione una opción</option>
@@ -139,7 +132,7 @@ const CrearEspacio = () => {
               <Input type="text" {...register("nombre")} />
               <Label>precio:</Label>
               <Input type="number" {...register("precio_hora")} />
-              <Input type="number" value="3" {...register("id_tipo")} hidden/>
+              <Input type="number" value="3" {...register("id_tipo")} hidden />
             </>
           )}
           {selectedOption === "cancha" && (
@@ -170,7 +163,7 @@ const CrearEspacio = () => {
               <Input type="text" {...register("nombre")} />
               <Label>Precio:</Label>
               <Input type="number" {...register("precio_hora")} />
-              <Input type="number" value="2" {...register("id_tipo")} hidden/>
+              <Input type="number" value="2" {...register("id_tipo")} hidden />
             </>
           )}
 
@@ -188,8 +181,11 @@ const CrearEspacio = () => {
             step="1800"
             onChange={handleEndTimeChange}
           />
-           <Label>Descripcion:</Label>
-           <p>En esta sección van los servicios o dirección o cualquier cosa que sea de utilidad para el usuario</p>
+          <Label>Descripcion:</Label>
+          <p>
+            En esta sección van los servicios o dirección o cualquier cosa que
+            sea de utilidad para el usuario
+          </p>
           <textarea
             type="text"
             cols="50"

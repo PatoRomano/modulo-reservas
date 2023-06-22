@@ -16,12 +16,12 @@
 }
 
 .tabla-container {
-    width: 70%;
+    width: 90%;
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-y: auto;
+    overflow-y: none;
     max-height: 600px;
 }
 
@@ -49,14 +49,17 @@
     color: #fff;
 }
 
-.tabla tbody tr.fila-roja {
-    background-color: #f8afaf;
+.tabla tbody td.fila-roja {
+    background-color: #ff6c6c;
 }
 .tabla tbody td.fila-amarilla {
     background-color: #fff48dfb;
 }
 .tabla tbody td.fila-verde {
     background-color: #a4ff7a;
+}
+.tabla tbody td.fila-azul {
+    background-color: #4f7ed6;
 }
 
 .tabla button.eliminar-btn {

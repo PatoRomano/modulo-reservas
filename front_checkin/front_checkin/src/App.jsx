@@ -18,7 +18,7 @@ import EditarEspacio from './pages/administrador/EditarEspacio'
 import { RequireAuth } from 'react-auth-kit'
 import ReservaSalon from './pages/reservas/ReservaSalon'
 import ReservaDepartamento from './pages/reservas/ReservaDepartamento'
-
+import Footer from './components/Footer'
 function App() {
   const [count, setCount] = useState(0)
 
@@ -43,6 +43,7 @@ function App() {
           <Route path="/editarEspacio/:id" element ={<RequireAuth loginPath='/login'><EditarEspacio /></RequireAuth>} ></Route>
       </Routes>
     </div>
+    <Footer />
     </>
   )
 }

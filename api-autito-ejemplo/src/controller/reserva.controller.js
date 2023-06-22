@@ -8,7 +8,7 @@ const getReservas = async (req,res)  => {
     let month = date.getMonth()
     let year = date.getFullYear()
     let fechaActual = day.toString()+"-"+month.toString()+"-"+year.toString()
-    const response = await pool.query('SELECT r.id, es.nombre, r.fecha_fin as fecha, r.hora_inicio, r.hora_fin, r.estado, r.descripcion, c.nombre as nombrecliente, c.apellido as apellidocliente, c.dni as dnicliente FROM reservas r JOIN espacios es ON es.id = r.id_espacio JOIN empresa em ON em.id = es.id_empresa JOIN cliente c ON c.id = r.id_cliente WHERE em.id = $1 and r.fecha_fin >= $2 order by fecha desc',[id_empresa,fechaActual])
+    const response = await pool.query('SELECT r.id, es.nombre, r.fecha_fin as fecha, r.hora_inicio, r.hora_fin, r.estado, r.descripcion, c.nombre as nombrecliente, c.apellido as apellidocliente, c.dni as dnicliente FROM reservas r JOIN espacios es ON es.id = r.id_espacio JOIN empresa em ON em.id = es.id_empresa JOIN cliente c ON c.id = r.id_cliente WHERE em.id = $1 and r.fecha_fin >= $2 order by r.fecha_fin desc',[id_empresa,fechaActual])
     res.status(200).json(response.rows);
 }
 
@@ -104,31 +104,31 @@ const reservarSinIdCliente = async (req,res)  => {
         }
     }
 
-    console.log(empresa.rows)
+    // console.log(empresa.rows)
     
-      llamadoWpp = await Axios({
-          url: `http://localhost:3001/lead`,
-          method: "POST",
-          data: {"message":
-          "RESERVA SOLICITADA:"+
-          "\n\nEspacio = "+espacio.rows[0]['nombre']+
-          "\nFecha = "+fecha+
-          "\nHora_inicio = "+hora_inicio+
-          "\nHora_fin = "+horaActual.getHours()+":"+horaActual.getMinutes()+":"+horaActual.getSeconds+
-          "\nNombre = "+nombre+
-          "\nApellido = "+apellido+
-          "\nDni = "+dni+
-          "\nCorreo = "+correo+
-          "\nContacto = "+contacto,
-          "phone":empresa.rows[0]['telefono']}
-      })
+    //   llamadoWpp = await Axios({
+    //       url: `http://localhost:3001/lead`,
+    //       method: "POST",
+    //       data: {"message":
+    //       "RESERVA SOLICITADA:"+
+    //       "\n\nEspacio = "+espacio.rows[0]['nombre']+
+    //       "\nFecha = "+fecha+
+    //       "\nHora_inicio = "+hora_inicio+
+    //       "\nHora_fin = "+horaActual.getHours()+":"+horaActual.getMinutes()+":"+horaActual.getSeconds+
+    //       "\nNombre = "+nombre+
+    //       "\nApellido = "+apellido+
+    //       "\nDni = "+dni+
+    //       "\nCorreo = "+correo+
+    //       "\nContacto = "+contacto,
+    //       "phone":empresa.rows[0]['telefono']}
+    //   })
 
-     res.status(200).json({
-        message:'Reserva agregada correctamente',
-         body:{
-             reserva:{id_espacio,fecha,hora_inicio,hora_fin,nombre, apellido, dni, correo, contacto}
-         }
-     });
+    //  res.status(200).json({
+    //     message:'Reserva agregada correctamente',
+    //      body:{
+    //          reserva:{id_espacio,fecha,hora_inicio,hora_fin,nombre, apellido, dni, correo, contacto}
+    //      }
+    //  });
 }
 
 const reservaTorneo = async (req,res)  => {
@@ -181,6 +181,18 @@ const reservaTorneo = async (req,res)  => {
              //reserva:{id_espacio,fecha,hora_inicio,hora_fin,nombre, apellido, dni, correo, contacto}
          }
      });
+}
+const updateEstadoReservasEstado = async (req,res)  => {
+    const response = await pool.query("UPDATE reservas"+
+    "SET estado = 'FINALIZADA'" +
+    "WHERE (fecha_fin < CURRENT_DATE OR (fecha_fin = CURRENT_DATE AND hora_fin <= CURRENT_TIME))" +
+    "and estado = 'ACEPTADA';")
+    res.status(200).json({
+        message:'Reservas actualizadas correctamente',
+        body:{
+            reserva:{id_reserva,id_usuario,flag}
+        }
+    });
 }
 
 module.exports = {getReservasDeporte,setReservaDeporte,getReservas,getReservaPorFecha,reservarSinIdCliente,updateEstadoReservaDeporte,reservaTorneo}

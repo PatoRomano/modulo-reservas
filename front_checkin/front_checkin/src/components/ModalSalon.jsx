@@ -127,6 +127,10 @@ const CalendarContainer = styled.div`
     width: 10px; /* Ajusta el ancho según tus necesidades */
     height: 40px; /* Ajusta la altura según tus necesidades */
   }
+  .react-calendar__tile:disabled{
+    background-color: #cbffdd !important;
+    color: #cbffdd !important;
+  }
 `;
 const Select = styled.select`
   width: 100%;

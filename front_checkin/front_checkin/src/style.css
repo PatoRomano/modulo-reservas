@@ -5,6 +5,7 @@
   body {
     margin: 0;
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-size: 20px;
   }
   
   .container {
@@ -13,7 +14,7 @@
   }
   
   .nav {
-    background-color: #333;
+    background-color: #00002D;
     color: white;
     display: flex;
     justify-content: space-between;

@@ -58,7 +58,7 @@ const Administrador = () => {
         <Link to="/crearReserva">
           <Button>Crear Reserva</Button>
         </Link>
-        <Tabla reservas = {reservas}></Tabla>
+        <Tabla reservas = {reservas} actualizarReservas={setReservas}></Tabla>
         
 
       </div>
