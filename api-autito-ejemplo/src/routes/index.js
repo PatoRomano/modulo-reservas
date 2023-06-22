@@ -2,7 +2,7 @@ const { Router } = require('express');
 const router = Router();
 const { getUsers, findOne, setUser} = require('../controller/usuario.controller');
 const { getTiposDeportes, getTiposDepartamentos, getTiposSalones, getTipos, setTipo} = require('../controller/tipoespacio.controller');
-const { getEmpresas,setEmpresa, getEmpresasDeportes, getEmpresasSalones,getEmpresasDepartamentos} = require('../controller/empresaController');
+const { getEmpresas,setEmpresa, getEmpresasDeportes, getEmpresasSalones,getEmpresasDepartamentos,getEmpresasFutbol} = require('../controller/empresaController');
 const { getEspacios,setEspacio, getEspacioDeportes,getEspacioSalones, getEspacioFindOne,getEspacioFindOneSalones,getEspacioFindOneDepartamentos, 
         getEspaciosPorEmpresa, getEspacioIdEspacio, updateEspacio} = require('../controller/espacio.controller');
 
@@ -43,6 +43,7 @@ router.post('/espaciosEmpresa', getEspaciosPorEmpresa)
 router.get('/empresasDeportes', getEmpresasDeportes);
 router.get('/empresasSalones', getEmpresasSalones);
 router.get('/empresasDepartamentos', getEmpresasDepartamentos);
+router.get('/empresasFutbol', getEmpresasFutbol);
 
 //SETTERS
 router.post('/setEmpresa', setEmpresa);

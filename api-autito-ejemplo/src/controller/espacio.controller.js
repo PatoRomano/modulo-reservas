@@ -45,7 +45,7 @@ const getEspacioFindOneDepartamentos = async (req,res)  => {
     const response = await pool.query('SELECT es.id, es.nombre as nombreespacio, es.precio_hora, '
     +'es.hora_inicio, es.hora_fin, es.descripcion, te.nombre as tipo FROM espacios es '
     +'INNER JOIN tipo_espacio as te ON te.id = es.id_tipo '
-    +'where te.id_padre = 2 and es.id_estado = 1 and id_empresa  = $1',[id_empresa]);
+    +'where te.id = 2 and es.id_estado = 1 and id_empresa  = $1',[id_empresa]);
     res.status(200).json(response.rows);
 }
 
@@ -73,8 +73,9 @@ const getEspacioSalones = async (req, res) => {
 }
 
 const setEspacio = async (req,res)  => {
-    const {id_empresa,id_tipo,id_estado,nombre,precio_hora,hora_inicio,hora_fin,descripcion} = req.body;
-    const response = await pool.query('INSERT INTO espacios (id_empresa,id_tipo,nombre,precio_hora,hora_inicio,hora_fin,descripcion) VALUES ($1, $2, $3, $4, $5, $6, %7)',[id_empresa,id_tipo,nombre,precio_hora,hora_inicio,hora_fin,descripcion]);
+    const {id_empresa,id_tipo,nombre,precio_hora,hora_inicio,hora_fin,descripcion} = req.body;
+    console.log(req.body)
+    const response = await pool.query('INSERT INTO espacios (id_empresa,id_tipo,nombre,precio_hora,hora_inicio,hora_fin,descripcion) VALUES ($1, $2, $3, $4, $5, $6, $7)',[id_empresa,id_tipo,nombre,precio_hora,hora_inicio,hora_fin,descripcion]);
     res.status(200).json({
         message:'espacio agregado correctamente',
         body:{

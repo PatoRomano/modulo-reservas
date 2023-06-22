@@ -4,11 +4,11 @@ const app = express();
 
 const cors = require("cors");
 
-const corsOptions = {
-  origin: "http://127.0.0.1:5173",
-};
+ const corsOptions = {
+   origin: "*" //["http://127.0.0.1:5173","192.168.149.209:5173"]
+ };
 
-app.use(cors(corsOptions));
+ app.use(cors(corsOptions));
 //configuraciones
 app.set('port',process.env.PORT || 3000)
 app.set('json spaces',2);

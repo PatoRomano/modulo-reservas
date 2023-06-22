@@ -5,6 +5,12 @@ const getEmpresas = async (req,res)  => {
     res.status(200).json(response.rows);
 }
 
+const getEmpresasFutbol = async (req,res)  => {
+    const response = await pool.query('SELECT DISTINCT e.* FROM empresa e INNER JOIN '+
+    'espacios es ON es.id_empresa = e.id INNER JOIN tipo_espacio te ON te.id = es.id_tipo WHERE es.id_estado = 1 and te.id_padre = 1 and te.id = 4 or te.id = 8')
+    res.status(200).json(response.rows);
+}
+
 const getEmpresasDeportes = async (req,res)  => {
     const response = await pool.query('SELECT DISTINCT e.* FROM empresa e INNER JOIN '+
     'espacios es ON es.id_empresa = e.id INNER JOIN tipo_espacio te ON te.id = es.id_tipo WHERE es.id_estado = 1 and te.id_padre = 1')
@@ -35,4 +41,4 @@ const setEmpresa = async (req,res)  => {
     console.log(req);
 }
 
-module.exports = {getEmpresas,setEmpresa,getEmpresasDeportes,getEmpresasDepartamentos,getEmpresasSalones}
+module.exports = {getEmpresas,setEmpresa,getEmpresasDeportes,getEmpresasDepartamentos,getEmpresasSalones,getEmpresasFutbol}

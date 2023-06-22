@@ -84,7 +84,7 @@ const reservarSinIdCliente = async (req,res)  => {
     id_cliente = response.rows[0]['id']
 
     let espacio = await pool.query('SELECT * FROM espacios where id = $1',[id_espacio]);
-    //let empresa = await pool.query('SELECT telefono FROM empresa where id = ' +espacio.rows[0]['id_empresa']);
+    let empresa = await pool.query('SELECT telefono FROM empresa where id = ' +espacio.rows[0]['id_empresa']);
     let horaInicio = new Date()
     let horaFin = new Date()
     let horario = parseInt(hora_inicio.substring(0,2))
@@ -103,23 +103,25 @@ const reservarSinIdCliente = async (req,res)  => {
             horaActual.setHours(horaActual.getHours()+1)
         }
     }
+
+    console.log(empresa.rows)
     
-    //  llamadoWpp = await Axios({
-    //      url: `http://localhost:3001/lead`,
-    //      method: "POST",
-    //      data: {"message":
-    //      "RESERVA SOLICITADA:"+
-    //      "\n\nEspacio = "+espacio.rows[0]['nombre']+
-    //      "\nFecha = "+fecha+
-    //      "\nHora_inicio = "+hora_inicio+
-    //      "\nHora_fin = "+hora_fin+
-    //      "\nNombre = "+nombre+
-    //      "\nApellido = "+apellido+
-    //      "\nDni = "+dni+
-    //      "\nCorreo = "+correo+
-    //      "\nContacto = "+contacto,
-    //      "phone":empresa.rows[0]['telefono']}
-    //  })
+      llamadoWpp = await Axios({
+          url: `http://localhost:3001/lead`,
+          method: "POST",
+          data: {"message":
+          "RESERVA SOLICITADA:"+
+          "\n\nEspacio = "+espacio.rows[0]['nombre']+
+          "\nFecha = "+fecha+
+          "\nHora_inicio = "+hora_inicio+
+          "\nHora_fin = "+horaActual+
+          "\nNombre = "+nombre+
+          "\nApellido = "+apellido+
+          "\nDni = "+dni+
+          "\nCorreo = "+correo+
+          "\nContacto = "+contacto,
+          "phone":empresa.rows[0]['telefono']}
+      })
 
      res.status(200).json({
         message:'Reserva agregada correctamente',
