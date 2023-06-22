@@ -70,4 +70,17 @@ export async function updateReserva(data) {
     }
 }
 
+export async function getTorneos() {
+    try {
+        const response = await Axios({
+            url: `${baseUrl}/getTorneos`,
+            method: "GET",
+        });
+        
+    return response;
+    } catch (e) {
+    console.log("error"+e);
+    }
+}
+
 

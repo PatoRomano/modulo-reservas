@@ -2,7 +2,7 @@ const Axios = require('axios')
 
 const getArbitros = async (req,res)  => {
     try {
-        const response = await Axios.get('http://192.168.149.209:3001/api/arbitros/');
+        const response = await Axios.get('http://192.168.137.114:3001/api/arbitros/');
         const arbitros = response.data; // Datos de la API externa
         
         // Devolver los datos obtenidos al invocador

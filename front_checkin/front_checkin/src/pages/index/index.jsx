@@ -3,6 +3,7 @@ import Header from "../../components/Header";
 import Logo from "../../assets/logo.svg";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
+
 const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -53,7 +54,13 @@ const Text = styled.p`
   font-size: 16px;
   margin-bottom: 8px;
 `;
-
+const Titulo = styled(Text)`
+  font-weight: bold;
+  color: white;
+`
+const HeaderStyle = styled(Header)`
+  background-color: #12128bda;
+`
 const DataDescripcion = styled(Data)`
   background-color: #00002d73;
 `;
@@ -85,11 +92,11 @@ const Index = () => {
       <div>
         <Container>
           <Card>
-            <Image src="/cancha.jpg" alt="" />
+            <Image src="/seguridad.jpg" alt="" />
             <Content>
               <DataDescripcion>
                 <Data>
-                  <Text>Confianza</Text>
+                  <Titulo>Confianza</Titulo>
                 </Data>
               </DataDescripcion>
               <Data>
@@ -105,11 +112,11 @@ const Index = () => {
             </Content>
           </Card>
           <Card>
-            <Image src="/cancha.jpg" alt="" />
+            <Image src="/facil.webp" alt="" />
             <Content>
               <DataDescripcion>
                 <Data>
-                  <Text>Sencillez</Text>
+                  <Titulo>Sencillez</Titulo>
                 </Data>
               </DataDescripcion>
               <Data>
@@ -123,20 +130,22 @@ const Index = () => {
             </Content>
           </Card>
           <Card>
-            <Image src="/cancha.jpg" alt="" />
+            <Image src="/mashup.jpg" alt="" />
             <Content>
               <DataDescripcion>
                 <Data>
-                  <Text>Flexibilidad</Text>
+                  <Titulo>Todo en uno</Titulo>
                 </Data>
               </DataDescripcion>
               <Data>
                 <Text>
-                  Flexibilidad total en tus reservas. Con nuestra página de
-                  reservas en línea, tienes el control total sobre tus horarios.
-                  Explora nuestras opciones disponibles las 24 horas del día y
-                  reserva tu cita o actividad favorita en el momento que más te
-                  convenga.
+                  Reúne en un solo lugar una amplia variedad de servicios
+                  ofrecidos por empresas confiables y de calidad. Explora
+                  opciones, compara y elige lo que más se adapte a tus
+                  necesidades, todo en un único y conveniente destino.
+                  Simplifica tu búsqueda y reserva con confianza, sabiendo que
+                  estás obteniendo lo mejor de múltiples empresas en un solo
+                  clic.
                 </Text>
               </Data>
             </Content>

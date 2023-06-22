@@ -20,6 +20,7 @@ const BackgroundImage = Styled.div`
   height: 100%;
   position: absolute;
   top: 0;
+  background-color : #7a7a7a81;
 `;
 
 const ContentContainer = Styled.div`
@@ -31,6 +32,7 @@ const ContentContainer = Styled.div`
   justify-content: flex-end;
   position: relative;
   z-index: 1;
+
 `;
 
 

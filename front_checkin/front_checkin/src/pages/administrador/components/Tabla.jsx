@@ -39,7 +39,7 @@ const Tabla = ({reservas, actualizarReservas}) => {
       if (reserva.id === idR) {
         return {
           ...reserva,
-          estado: estado === 1 ? "ACEPTADA" : "RECHAZADA",
+          estado: estado === 1 ? "ACEPTADA" : estado === 0 ? "RECHAZADA": "FINALIZADA",
         };
       }
       return reserva;
@@ -58,7 +58,8 @@ const Tabla = ({reservas, actualizarReservas}) => {
       reserva.apellidocliente
         .toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
-      reserva.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+      reserva.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      reserva.estado.toLowerCase().includes(searchTerm.toLowerCase())
     ) {
       // Filtrar por rango de fechas
       if (selectedDateRange[0] !== null && selectedDateRange[1] !== null) {
@@ -180,6 +181,13 @@ const Tabla = ({reservas, actualizarReservas}) => {
                             onClick={() => cambiarEstado(reserva.id, 0)}
                           >
                             <FaTrashAlt />
+                          </button>
+                          <button
+                            className="finalizar-btn"
+                            title="finalizar"
+                            onClick={() => cambiarEstado(reserva.id, 2)}
+                          >
+                            <AiFillPlusCircle />
                           </button>
                         </div>
                       </td>

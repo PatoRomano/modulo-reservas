@@ -16,8 +16,10 @@ const updateEstadoReservaDeporte = async (req,res)  => {
     const {id_reserva,id_usuario,flag} = req.body;
     if (flag == 0) {
         const response = await pool.query('UPDATE reservas SET id_usuario=$1, estado=$3 WHERE id=$2',[id_usuario,id_reserva,"RECHAZADA"])    
-    } else {
+    } else if (flag == 1) {
         const response = await pool.query('UPDATE reservas SET id_usuario=$1, estado=$3 WHERE id=$2',[id_usuario,id_reserva,"ACEPTADA"]) 
+    } else {
+        const response = await pool.query('UPDATE reservas SET id_usuario=$1, estado=$3 WHERE id=$2',[id_usuario,id_reserva,"FINALIZADA"]) 
     }
     res.status(200).json({
         message:'Reserva actualizada correctamente',
@@ -123,12 +125,12 @@ const reservarSinIdCliente = async (req,res)  => {
     //       "phone":empresa.rows[0]['telefono']}
     //   })
 
-    //  res.status(200).json({
-    //     message:'Reserva agregada correctamente',
-    //      body:{
-    //          reserva:{id_espacio,fecha,hora_inicio,hora_fin,nombre, apellido, dni, correo, contacto}
-    //      }
-    //  });
+     res.status(200).json({
+        message:'Reserva agregada correctamente',
+         body:{
+             reserva:{id_espacio,fecha,hora_inicio,hora_fin,nombre, apellido, dni, correo, contacto}
+         }
+     });
 }
 
 const reservaTorneo = async (req,res)  => {
@@ -140,8 +142,8 @@ const reservaTorneo = async (req,res)  => {
     response = await pool.query('SELECT * FROM cliente where dni = $1',[dni]);
     id_cliente = response.rows[0]['id']
 
-    let espacio = await pool.query('SELECT * FROM espacios where id = $1',[id_espacio]);
-    let empresa = await pool.query('SELECT telefono FROM empresa where id = ' +espacio.rows[0]['id_empresa']);
+    //let espacio = await pool.query('SELECT * FROM espacios where id = $1',[id_espacio]);
+    //let empresa = await pool.query('SELECT telefono FROM empresa where id = ' +espacio.rows[0]['id_empresa']);
 
     let texto = ""
 
@@ -159,27 +161,26 @@ const reservaTorneo = async (req,res)  => {
         texto += "\n"
     }
     
-     llamadoWpp = await Axios({
-         url: `http://localhost:3001/lead`,
-         method: "POST",
-         data: {"message":
-         "RESERVA SOLICITADA PARA TORNEO:"+
-         "\n\nEspacio = "+espacio.rows[0]['nombre']+
-         "\n\n"+texto+
-         "\nNombre = "+nombre+
-         "\nApellido = "+apellido+
-         "\nDni = "+dni+
-         "\nCorreo = "+correo+
-         "\nContacto = "+contacto,
-         "phone":empresa.rows[0]['telefono']}
-     })
+    //  llamadoWpp = await Axios({
+    //      url: `http://localhost:3001/lead`,
+    //      method: "POST",
+    //      data: {"message":
+    //      "RESERVA SOLICITADA PARA TORNEO:"+
+    //      "\n\nEspacio = "+espacio.rows[0]['nombre']+
+    //      "\n\n"+texto+
+    //      "\nNombre = "+nombre+
+    //      "\nApellido = "+apellido+
+    //      "\nDni = "+dni+
+    //      "\nCorreo = "+correo+
+    //      "\nContacto = "+contacto,
+    //      "phone":empresa.rows[0]['telefono']}
+    //  })
 
      res.status(200).json({
         message:'Reserva agregada correctamente',
-         body:{
-            reserva:"hola"
-             //reserva:{id_espacio,fecha,hora_inicio,hora_fin,nombre, apellido, dni, correo, contacto}
-         }
+        //  body:{
+        //      reserva:{id_espacio,fecha,hora_inicio,hora_fin,nombre, apellido, dni, correo, contacto}
+        //  }
      });
 }
 const updateEstadoReservasEstado = async (req,res)  => {

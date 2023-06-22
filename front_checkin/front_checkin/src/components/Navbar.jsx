@@ -29,11 +29,12 @@ const UserProfile = styled.li`
 `;
 
 const UserAvatar = styled.div`
+  cursor: pointer;
   width: 30px;
   height: 30px;
   border-radius: 50%;
   overflow: hidden;
-
+  margin : 5px;
   img {
     width: 100%;
     height: 100%;
@@ -43,8 +44,18 @@ const UserAvatar = styled.div`
 
 const UserName = styled.span`
   margin-left: 10px;
-`;
+  margin-right : 5px;
 
+`;
+const Text = styled.p`
+  font-size: 16px;
+  margin-bottom: 8px;
+`;
+const Titulo = styled(Text)`
+  cursor: pointer;
+  font-weight: bold;
+  color: black;
+`
 //-------------- componente -------------------
 
 
@@ -80,7 +91,7 @@ const Navbar = () => {
         {isAuthenticated && (
           <CustomLink to="/administrador">Administrar</CustomLink>
         )}
-        {isAuthenticated && <button onClick={logout}>Cerrar Sesión</button>}
+        {isAuthenticated && <button onClick={logout}><Titulo>Cerrar Sesión</Titulo></button>}
         {isAuthenticated && (
           <UserProfile>
             <UserAvatar>
