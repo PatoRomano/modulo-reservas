@@ -4,7 +4,7 @@ const { getUsers, findOne, setUser} = require('../controller/usuario.controller'
 const { getTiposDeportes, getTiposDepartamentos, getTiposSalones, getTipos, setTipo} = require('../controller/tipoespacio.controller');
 const { getEmpresas,setEmpresa, getEmpresasDeportes, getEmpresasSalones,getEmpresasDepartamentos,getEmpresasFutbol} = require('../controller/empresaController');
 const { getEspacios,setEspacio, getEspacioDeportes,getEspacioSalones, getEspacioFindOne,getEspacioFindOneSalones,getEspacioFindOneDepartamentos, 
-        getEspaciosPorEmpresa, getEspacioIdEspacio, updateEspacio} = require('../controller/espacio.controller');
+        getEspaciosPorEmpresa, getEspacioIdEspacio, updateEspacio, getCanchas, getEspaciosPorEmpresaCancha} = require('../controller/espacio.controller');
 
 const { getReservasDeporte,setReservaDeporte,getReservas,getReservaPorFecha,reservarSinIdCliente,updateEstadoReservaDeporte,reservaTorneo} = require('../controller/reserva.controller');
 const { getServicios,setServicio,getServiciosPorTipo} = require('../controller/servicio.controller');
@@ -71,5 +71,8 @@ router.post('/setCliente', setCliente);
 router.post('/reservarSinIdCliente', reservarSinIdCliente);
 router.post('/updateEstadoReservaDeporte', updateEstadoReservaDeporte);
 router.post('/reservaTorneo', reservaTorneo);
+
+router.post('/canchas', getCanchas);
+router.post('/espacios', getEspaciosPorEmpresaCancha);
 
 module.exports = router;

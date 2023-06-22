@@ -114,7 +114,7 @@ const reservarSinIdCliente = async (req,res)  => {
           "\n\nEspacio = "+espacio.rows[0]['nombre']+
           "\nFecha = "+fecha+
           "\nHora_inicio = "+hora_inicio+
-          "\nHora_fin = "+horaActual+
+          "\nHora_fin = "+horaActual.getHours()+":"+horaActual.getMinutes()+":"+horaActual.getSeconds+
           "\nNombre = "+nombre+
           "\nApellido = "+apellido+
           "\nDni = "+dni+

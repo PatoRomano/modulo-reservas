@@ -16,9 +16,21 @@ const updateEspacio = async (req,res)  => {
     });
 }
 
+const getEspaciosPorEmpresaCancha = async (req,res)  => {
+    const {id_empresa,id_tipo} = req.body;
+    const response = await pool.query('select * from espacios e where id_empresa = $1 and id_tipo = $2',[id_empresa,id_tipo]);
+    res.status(200).json(response.rows);
+}
+
 const getEspacioIdEspacio = async (req,res)  => {
     const {id_espacio} = req.body;
     const response = await pool.query('SELECT * FROM espacios WHERE id = $1',[id_espacio]);
+    res.status(200).json(response.rows);
+}
+
+const getCanchas = async (req,res)  => {
+    const {id_espacio} = req.body;
+    const response = await pool.query('select te.nombre,te.id from espacios e inner join tipo_espacio te on te.id = e.id_tipo where te.id_padre = 1 and id_empresa = $1',[id_espacio]);
     res.status(200).json(response.rows);
 }
 
@@ -36,7 +48,7 @@ const getEspacioFindOneSalones = async (req,res)  => {
     const response = await pool.query('SELECT es.id, es.nombre as nombreespacio, es.precio_hora, '
     +'es.hora_inicio, es.hora_fin, es.descripcion, te.nombre as tipo FROM espacios es '
     +'INNER JOIN tipo_espacio as te ON te.id = es.id_tipo '
-    +'where te.id_padre = 3 and es.id_estado = 1 and id_empresa  = $1',[id_empresa]);
+    +'where te.id = 3 and es.id_estado = 1 and id_empresa  = $1',[id_empresa]);
     res.status(200).json(response.rows);
 }
 
@@ -89,4 +101,4 @@ const getEspaciosPorEmpresa = async (req, res) => {
     const response = await pool.query('SELECT * FROM espacios WHERE id_empresa = $1',[id_empresa]);
     res.status(200).json(response.rows);    
 }
-module.exports = {getEspacios,setEspacio, getEspacioDeportes,getEspacioSalones, getEspacioFindOne, getEspaciosPorEmpresa, getEspacioFindOneSalones, getEspacioFindOneDepartamentos, getEspacioIdEspacio, updateEspacio};
+module.exports = {getEspacios,setEspacio, getEspacioDeportes,getEspacioSalones, getEspacioFindOne, getEspaciosPorEmpresa, getEspacioFindOneSalones, getEspacioFindOneDepartamentos, getEspacioIdEspacio, updateEspacio, getCanchas, getEspaciosPorEmpresaCancha};
