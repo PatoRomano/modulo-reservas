@@ -108,22 +108,22 @@ const reservarSinIdCliente = async (req,res)  => {
 
     // console.log(empresa.rows)
     
-    //   llamadoWpp = await Axios({
-    //       url: `http://localhost:3001/lead`,
-    //       method: "POST",
-    //       data: {"message":
-    //       "RESERVA SOLICITADA:"+
-    //       "\n\nEspacio = "+espacio.rows[0]['nombre']+
-    //       "\nFecha = "+fecha+
-    //       "\nHora_inicio = "+hora_inicio+
-    //       "\nHora_fin = "+horaActual.getHours()+":"+horaActual.getMinutes()+":"+horaActual.getSeconds+
-    //       "\nNombre = "+nombre+
-    //       "\nApellido = "+apellido+
-    //       "\nDni = "+dni+
-    //       "\nCorreo = "+correo+
-    //       "\nContacto = "+contacto,
-    //       "phone":empresa.rows[0]['telefono']}
-    //   })
+       llamadoWpp = await Axios({
+           url: `http://localhost:3001/lead`,
+           method: "POST",
+           data: {"message":
+           "RESERVA SOLICITADA:"+
+           "\n\nEspacio = "+espacio.rows[0]['nombre']+
+           "\nFecha = "+fecha+
+           "\nHora_inicio = "+hora_inicio+
+           "\nHora_fin = "+horaActual.getHours()+":"+horaActual.getMinutes()+":"+horaActual.getSeconds()+
+           "\nNombre = "+nombre+
+           "\nApellido = "+apellido+
+           "\nDni = "+dni+
+           "\nCorreo = "+correo+
+           "\nContacto = "+contacto,
+           "phone":empresa.rows[0]['telefono']}
+       })
 
      res.status(200).json({
         message:'Reserva agregada correctamente',
@@ -142,8 +142,8 @@ const reservaTorneo = async (req,res)  => {
     response = await pool.query('SELECT * FROM cliente where dni = $1',[dni]);
     id_cliente = response.rows[0]['id']
 
-    //let espacio = await pool.query('SELECT * FROM espacios where id = $1',[id_espacio]);
-    //let empresa = await pool.query('SELECT telefono FROM empresa where id = ' +espacio.rows[0]['id_empresa']);
+    let espacio = await pool.query('SELECT * FROM espacios where id = $1',[id_espacio]);
+    let empresa = await pool.query('SELECT telefono FROM empresa where id = ' +espacio.rows[0]['id_empresa']);
 
     let texto = ""
 
@@ -161,20 +161,20 @@ const reservaTorneo = async (req,res)  => {
         texto += "\n"
     }
     
-    //  llamadoWpp = await Axios({
-    //      url: `http://localhost:3001/lead`,
-    //      method: "POST",
-    //      data: {"message":
-    //      "RESERVA SOLICITADA PARA TORNEO:"+
-    //      "\n\nEspacio = "+espacio.rows[0]['nombre']+
-    //      "\n\n"+texto+
-    //      "\nNombre = "+nombre+
-    //      "\nApellido = "+apellido+
-    //      "\nDni = "+dni+
-    //      "\nCorreo = "+correo+
-    //      "\nContacto = "+contacto,
-    //      "phone":empresa.rows[0]['telefono']}
-    //  })
+      llamadoWpp = await Axios({
+          url: `http://localhost:3001/lead`,
+          method: "POST",
+          data: {"message":
+          "RESERVA SOLICITADA PARA TORNEO:"+
+          "\n\nEspacio = "+espacio.rows[0]['nombre']+
+          "\n\n"+texto+
+          "\nNombre = "+nombre+
+          "\nApellido = "+apellido+
+          "\nDni = "+dni+
+          "\nCorreo = "+correo+
+          "\nContacto = "+contacto,
+          "phone":empresa.rows[0]['telefono']}
+      })
 
      res.status(200).json({
         message:'Reserva agregada correctamente',

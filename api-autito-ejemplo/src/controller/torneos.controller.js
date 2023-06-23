@@ -4,7 +4,7 @@ const pool = require("../config/db");
 const getTorneos = async (req, res) => {
   try {
     const response = await Axios.get(
-      "http://192.168.137.114:3001/api/torneos/"
+      "http://192.168.149.209:3001/api/torneos/"
     );
     const torneos = response.data; // Datos de la API externa
     console.log(torneos.torneos[0].sede_id);
